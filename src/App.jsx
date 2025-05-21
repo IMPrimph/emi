@@ -4,18 +4,13 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import IconButton from '@mui/material/IconButton'
+import Chip from '@mui/material/Chip'
 import LoanForm from "./components/LoanForm";
 import ExtraPaymentForm from "./components/ExtraPaymentForm";
 import LoanSummary from "./components/LoanSummary";
 import PaymentSchedule from "./components/PaymentSchedule";
 import { calculateEMI, generateSchedule } from "./utils/calculateLoan";
 import { formatCurrency } from "./utils/format";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
 function App() {
   const [loanDetails, setLoanDetails] = useState({ amount: '', rate: '', tenure: '' });
@@ -73,23 +68,12 @@ function App() {
   };
 
   return (
-    <Box
-      sx={(theme) => ({
-        minHeight: '100vh',
-        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-        py: 6,
-      })}
-    >
+    <Box sx={{ minHeight: '100vh', backgroundColor: 'background.default', py: 6 }}>
       <Container maxWidth="md">
         <Typography
           variant="h3"
           align="center"
-          sx={{
-            color: 'common.white',
-            fontWeight: 700,
-            mb: 4,
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-          }}
+          sx={{ color: 'text.primary', fontWeight: 700, mb: 4 }}
         >
           Professional EMI Loan Calculator
         </Typography>
@@ -104,7 +88,7 @@ function App() {
 
         {schedule.length > 0 && (
           <>
-            <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid container spacing={3} sx={{ mb: 3 }}>
               <Grid item xs={12} md={6}>
                 <Paper sx={{ p: 2, borderRadius: 2 }} elevation={6}>
                   <ExtraPaymentForm
@@ -115,38 +99,21 @@ function App() {
                   />
                   {Object.keys(extraPayments).length > 0 && (
                     <>
-                      <Typography variant="subtitle1" sx={{ mt: 2 }}>
+                      <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
                         Extra Payments
                       </Typography>
-                      <List dense>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {Object.entries(extraPayments).map(([month, amt]) => (
-                          <ListItem
+                          <Chip
                             key={month}
-                            secondaryAction={
-                              <>
-                                <IconButton
-                                  edge="end"
-                                  aria-label="edit"
-                                  onClick={() => editExtraPayment(Number(month))}
-                                >
-                                  <EditIcon />
-                                </IconButton>
-                                <IconButton
-                                  edge="end"
-                                  aria-label="delete"
-                                  onClick={() => removeExtraPayment(Number(month))}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </>
-                            }
-                          >
-                            <ListItemText
-                              primary={`Month ${month}: ${formatCurrency(amt)}`}
-                            />
-                          </ListItem>
+                            label={`Month ${month}: ${formatCurrency(amt)}`}
+                            onDelete={() => removeExtraPayment(Number(month))}
+                            onClick={() => editExtraPayment(Number(month))}
+                            variant="outlined"
+                            color="secondary"
+                          />
                         ))}
-                      </List>
+                      </Box>
                     </>
                   )}
                 </Paper>
@@ -156,7 +123,7 @@ function App() {
               </Grid>
             </Grid>
 
-            <Paper sx={{ p: 2, borderRadius: 2 }} elevation={6}>
+            <Paper sx={{ p: 2, borderRadius: 2, mb: 3 }} elevation={6}>
               <PaymentSchedule schedule={schedule} />
             </Paper>
           </>
@@ -164,7 +131,7 @@ function App() {
       </Container>
 
       <Box component="footer" sx={{ mt: 4, textAlign: 'center' }}>
-        <Typography variant="body2" sx={{ color: 'common.white' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           © {new Date().getFullYear()} Professional EMI Loan Calculator. All Rights Reserved.
         </Typography>
       </Box>

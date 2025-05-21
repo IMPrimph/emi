@@ -12,13 +12,12 @@ export default function LoanSummary({ schedule, loanDetails }) {
 
   return (
     <Paper
-      elevation={6}
+      elevation={3}
       sx={(theme) => ({
-        height: '100%',
         p: 2,
         borderRadius: 2,
-        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-        color: theme.palette.common.white,
+        backgroundColor: 'background.paper',
+        borderLeft: `4px solid ${theme.palette.primary.main}`,
       })}
     >
       <Typography variant="h6" gutterBottom>

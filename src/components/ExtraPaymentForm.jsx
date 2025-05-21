@@ -14,7 +14,6 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
               setExtraPayment({ ...extraPayment, month: e.target.value })
             }
             fullWidth
-            InputProps={{ inputProps: { min: 1 } }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -29,7 +28,7 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
             fullWidth
             InputProps={{
               startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-              inputProps: { min: 0 },
+              inputProps: { step: 'any' },
             }}
           />
         </Grid>

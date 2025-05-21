@@ -17,7 +17,7 @@ export default function LoanForm({ loanDetails, setLoanDetails, calculate }) {
             fullWidth
             InputProps={{
               startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-              inputProps: { min: 0 },
+              inputProps: { step: 'any' },
             }}
           />
         </Grid>
@@ -31,7 +31,7 @@ export default function LoanForm({ loanDetails, setLoanDetails, calculate }) {
               setLoanDetails({ ...loanDetails, rate: e.target.value })
             }
             fullWidth
-            InputProps={{ inputProps: { min: 0, step: 0.01 } }}
+            InputProps={{ inputProps: { step: 'any' } }}
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -44,7 +44,7 @@ export default function LoanForm({ loanDetails, setLoanDetails, calculate }) {
               setLoanDetails({ ...loanDetails, tenure: e.target.value })
             }
             fullWidth
-            InputProps={{ inputProps: { min: 0, step: 1 } }}
+            InputProps={{ inputProps: { step: 1 } }}
           />
         </Grid>
         <Grid item xs={12} sm={2}>
