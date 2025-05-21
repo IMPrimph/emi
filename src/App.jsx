@@ -46,14 +46,21 @@ function App() {
     if (!monthNum || isNaN(monthNum) || monthNum < 1) return;
     if (isNaN(amtNum) || amtNum <= 0) return;
     const updatedExtras = { ...extraPayments };
-    if (editingMonth !== null && editingMonth !== monthNum) {
-      delete updatedExtras[editingMonth];
+
+    if (editingMonth !== null) { // We are in edit mode
+      if (editingMonth !== monthNum) { // Month number was changed during edit
+        delete updatedExtras[editingMonth]; // Delete the old entry
+      }
+      // In either case (month changed or just amount changed), update the entry for monthNum
+      updatedExtras[monthNum] = amtNum;
+    } else { // We are in add mode
+      updatedExtras[monthNum] = amtNum;
     }
-    updatedExtras[monthNum] = amtNum;
+
     setExtraPayments(updatedExtras);
     recalcSchedule(updatedExtras);
-    setExtraPayment({ month: '', amount: '' });
-    setEditingMonth(null);
+    setExtraPayment({ month: '', amount: '' }); // Clear form
+    setEditingMonth(null); // Reset editing mode
   };
 
   const removeExtraPayment = (month) => {
@@ -94,7 +101,7 @@ function App() {
           Professional EMI Loan Calculator
         </Typography>
 
-        <Paper sx={{ p: 3, mb: 3 }} elevation={6}>
+        <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }} elevation={6}>
           <LoanForm
             loanDetails={loanDetails}
             setLoanDetails={setLoanDetails}
@@ -129,14 +136,14 @@ function App() {
                                   aria-label="edit"
                                   onClick={() => editExtraPayment(Number(month))}
                                 >
-                                  <EditIcon />
+                                  <EditIcon color="primary" />
                                 </IconButton>
                                 <IconButton
                                   edge="end"
                                   aria-label="delete"
                                   onClick={() => removeExtraPayment(Number(month))}
                                 >
-                                  <DeleteIcon />
+                                  <DeleteIcon color="error" />
                                 </IconButton>
                               </>
                             }

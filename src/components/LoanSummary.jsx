@@ -14,7 +14,6 @@ export default function LoanSummary({ schedule, loanDetails }) {
     <Paper
       elevation={6}
       sx={(theme) => ({
-        height: '100%',
         p: 2,
         borderRadius: 2,
         background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
@@ -26,20 +25,20 @@ export default function LoanSummary({ schedule, loanDetails }) {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2">EMI</Typography>
-          <Typography variant="subtitle1">{formatCurrency(originalEMI)}</Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>EMI</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>{formatCurrency(originalEMI)}</Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2">Total Interest Paid</Typography>
-          <Typography variant="subtitle1">{formatCurrency(totalInterest)}</Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>Total Interest Paid</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>{formatCurrency(totalInterest)}</Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2">Interest Saved</Typography>
-          <Typography variant="subtitle1">{formatCurrency(interestSaved)}</Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>Interest Saved</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>{formatCurrency(interestSaved)}</Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2">Tenure Reduced</Typography>
-          <Typography variant="subtitle1">{formatNumber(monthsReduced)} months</Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>Tenure Reduced</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>{formatNumber(monthsReduced)} months</Typography>
         </Grid>
       </Grid>
     </Paper>
