@@ -90,7 +90,7 @@ function App() {
           <>
             <Grid container spacing={3} sx={{ mb: 3 }}>
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, borderRadius: 2 }} elevation={6}>
+            <Paper sx={{ p: 2 }} elevation={6}>
                   <ExtraPaymentForm
                     extraPayment={extraPayment}
                     setExtraPayment={setExtraPayment}
@@ -109,7 +109,6 @@ function App() {
                             label={`Month ${month}: ${formatCurrency(amt)}`}
                             onDelete={() => removeExtraPayment(Number(month))}
                             onClick={() => editExtraPayment(Number(month))}
-                            variant="outlined"
                             color="secondary"
                           />
                         ))}
@@ -123,7 +122,7 @@ function App() {
               </Grid>
             </Grid>
 
-            <Paper sx={{ p: 2, borderRadius: 2, mb: 3 }} elevation={6}>
+            <Paper sx={{ p: 2, mb: 3 }} elevation={6}>
               <PaymentSchedule schedule={schedule} />
             </Paper>
           </>

@@ -4,7 +4,7 @@ import { TextField, Button, Grid, Box, InputAdornment } from '@mui/material';
 export default function LoanForm({ loanDetails, setLoanDetails, calculate }) {
   return (
     <Box component="form" noValidate autoComplete="off" sx={{ mb: 2 }}>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={3} alignItems="center">
         <Grid item xs={12} sm={4}>
           <TextField
             label="Loan Amount"

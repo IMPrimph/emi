@@ -5,15 +5,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
 } from '@mui/material';
+import Box from '@mui/material/Box';
 import { formatCurrency, formatNumber } from '../utils/format';
 
 export default function PaymentSchedule({ schedule }) {
   return (
     <TableContainer
-      component={Paper}
-      sx={{ maxHeight: 500, borderRadius: 2, overflowX: 'auto' }}
+      component={Box}
+      sx={{ maxHeight: 500, overflowX: 'auto' }}
     >
       <Table size="small" stickyHeader>
         <TableHead>

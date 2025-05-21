@@ -3,7 +3,7 @@ import { TextField, Button, Grid, Box, InputAdornment } from '@mui/material';
 export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExtraPayment, editing }) {
   return (
     <Box sx={{ mb: 2 }}>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={3} alignItems="center">
         <Grid item xs={12} sm={3}>
           <TextField
             label="Month #"
@@ -33,15 +33,15 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
           />
         </Grid>
         <Grid item xs={12} sm={3}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            size="large"
-            onClick={addExtraPayment}
-          >
-            {editing ? 'Update Extra' : 'Add Extra'}
-          </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
+          size="large"
+          onClick={addExtraPayment}
+        >
+          {editing ? 'Update Extra' : 'Add Extra'}
+        </Button>
         </Grid>
       </Grid>
     </Box>

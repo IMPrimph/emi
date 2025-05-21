@@ -15,7 +15,6 @@ export default function LoanSummary({ schedule, loanDetails }) {
       elevation={3}
       sx={(theme) => ({
         p: 2,
-        borderRadius: 2,
         backgroundColor: 'background.paper',
         borderLeft: `4px solid ${theme.palette.primary.main}`,
       })}
