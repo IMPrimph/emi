@@ -1,3 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Light theme variables */
+:root {
+  --color-primary: #3B82F6;
+  --color-secondary: #4B5563;
+  --color-bg: #fff;
+  --color-accent: #6366F1;
+  --color-tooltip-bg: #232634;
+  --color-tooltip-title: #fff;
+  --color-tooltip-body: #fff;
+  --color-grid: rgba(229, 231, 235, 0.5);
+  --color-grid-border: #D1D5DB;
+  --shadow-elevation: 0 6px 32px rgba(59,130,246,0.12);
+
+  --button-bg: #3B82F6;
+  --button-bg-hover: #2563EB;
+  --button-text: #fff;
+  --input-bg: #fff;
+  --input-border: #D1D5DB;
+  --input-text: #181A20;
+
+  --chart-bar-principal: rgba(59, 130, 246, 0.85);
+  --chart-bar-interest: rgba(99, 102, 241, 0.85);
+  --chart-line-outflow: #EF4444;
+  --chart-line-outflow-bg: rgba(239, 68, 68, 0.15);
+
+  --card-bg: #fff;
+  --card-text: #181A20;
+  --card-shadow: 0 6px 32px rgba(59,130,246,0.12);
+}
+
+[data-theme="dark"] {
+  --color-primary: #60A5FA;
+  --color-secondary: #D1D5DB;
+  --color-bg: #181A20;
+  --color-accent: #818CF8;
+  --color-tooltip-bg: #232634;
+  --color-tooltip-title: #fff;
+  --color-tooltip-body: #fff;
+  --color-grid: rgba(55, 65, 81, 0.5);
+  --color-grid-border: #374151;
+  --shadow-elevation: 0 6px 32px rgba(59,130,246,0.22);
+
+  --button-bg: #2563EB;
+  --button-bg-hover: #1E40AF;
+  --button-text: #fff;
+  --input-bg: #232634;
+  --input-border: #374151;
+  --input-text: #F3F4F6;
+
+  --chart-bar-principal: rgba(96, 165, 250, 0.85);
+  --chart-bar-interest: rgba(129, 140, 248, 0.85);
+  --chart-line-outflow: #F87171;
+  --chart-line-outflow-bg: rgba(239, 68, 68, 0.25);
+
+  --card-bg: #232634;
+  --card-text: #F3F4F6;
+  --card-shadow: 0 6px 32px rgba(59,130,246,0.22);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-secondary);
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -66,3 +132,30 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+
+body[data-theme='dark'] {
+  background: #181A20;
+  color: #F3F4F6;
+}
+
+button, .MuiButton-root {
+  background: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+button:hover, .MuiButton-root:hover {
+  background: var(--button-bg-hover) !important;
+}
+input, .MuiInputBase-root {
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+
+.card, .loan-form-container, .payment-schedule-container, .loan-summary-container, .extra-payment-form {
+  background: var(--card-bg) !important;
+  color: var(--card-text) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition: background 0.3s, color 0.3s;
+}
