@@ -30,11 +30,14 @@ export function generateSchedule(P, annualRate, tenureMonths, emi, extraPayments
 
 // Utility to use service worker for EMI calculation if available
 export async function calculateEMIWithSW({ amount, rate, tenure, extraPayments }) {
+  // Always fallback to local calculation if no result in 1s
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     return new Promise((resolve) => {
+      let settled = false;
       const msgChannel = new MessageChannel();
       msgChannel.port1.onmessage = (event) => {
         if (event.data && event.data.type === 'EMI_RESULT') {
+          settled = true;
           resolve(event.data.payload);
         }
       };
@@ -42,6 +45,9 @@ export async function calculateEMIWithSW({ amount, rate, tenure, extraPayments }
         type: 'CALCULATE_EMI',
         payload: { amount, rate, tenure, extraPayments }
       }, [msgChannel.port2]);
+      setTimeout(() => {
+        if (!settled) resolve(null);
+      }, 1000);
     });
   }
   // fallback to local calculation

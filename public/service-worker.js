@@ -22,13 +22,13 @@ self.addEventListener('message', async (event) => {
       let month = 1;
       while (principalLeft > 0 && month <= tenureMonths + 240) {
         const interest = principalLeft * monthlyRate;
-        let principalPaid = emi - interest + (extraPayments[month] || 0);
+        let principalPaid = emi - interest + (extraPayments && extraPayments[month] ? extraPayments[month] : 0);
         principalPaid = principalPaid > principalLeft ? principalLeft : principalPaid;
         principalLeft -= principalPaid;
         schedule.push({
           month,
           emi: emi,
-          extra: extraPayments[month] || 0,
+          extra: extraPayments && extraPayments[month] ? extraPayments[month] : 0,
           interest,
           principalPaid,
           principalLeft: Math.abs(principalLeft),
@@ -42,15 +42,30 @@ self.addEventListener('message', async (event) => {
     const tn = parseInt(tenure, 10) || 0;
     const totalMonths = tn * 12;
     const monthlyRate = rt / 12 / 100;
-    const emi = calculateEMI(amt, monthlyRate, totalMonths);
-    const schedule = generateSchedule(amt, rt, totalMonths, emi, extraPayments || {});
-    event.source.postMessage({ type: 'EMI_RESULT', payload: { emi, schedule } });
+    let emi = 0;
+    if (amt > 0 && monthlyRate > 0 && totalMonths > 0) {
+      emi = calculateEMI(amt, monthlyRate, totalMonths);
+    }
+    const schedule = emi > 0 ? generateSchedule(amt, rt, totalMonths, emi, extraPayments || {}) : [];
+    // Always respond to both MessageChannel and event.source for maximum compatibility
+    if (event.ports && event.ports[0]) {
+      try {
+        event.ports[0].postMessage({ type: 'EMI_RESULT', payload: { emi, schedule } });
+      } catch (e) {}
+    }
+    if (event.source && event.source.postMessage) {
+      try {
+        event.source.postMessage({ type: 'EMI_RESULT', payload: { emi, schedule } });
+      } catch (e) {}
+    }
   }
 });
 
 // Cache static assets for offline use (optional, basic example)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Skip chrome-extension and other unsupported schemes
+  if (!event.request.url.startsWith('http')) return;
   event.respondWith(
     caches.open('emi-static-v1').then((cache) =>
       cache.match(event.request).then((resp) =>

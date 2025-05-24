@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Grid,
   TextField,
   Button,
   Paper,
@@ -12,6 +11,7 @@ import {
   IconButton,
   Alert,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { formatCurrency, formatNumber } from '../utils/format';
 
@@ -19,6 +19,8 @@ export default function ActualPaymentScreen({ schedule }) {
   const [entry, setEntry] = useState({ month: '', amount: '' });
   const [payments, setPayments] = useState({});
   const [error, setError] = useState('');
+  const [historyView, setHistoryView] = useState('month'); // 'month' or 'year'
+  const [expandedMonth, setExpandedMonth] = useState(null);
 
   // Load payments from localStorage on mount
   useEffect(() => {
@@ -32,7 +34,11 @@ export default function ActualPaymentScreen({ schedule }) {
 
   // Save payments to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('emi_actual_payments', JSON.stringify(payments));
+    try {
+      localStorage.setItem('emi_actual_payments', JSON.stringify(payments));
+    } catch (e) {
+      // fallback: do nothing
+    }
   }, [payments]);
 
   const addPayment = () => {
@@ -44,8 +50,13 @@ export default function ActualPaymentScreen({ schedule }) {
     setError(err);
     if (err) return;
     setPayments((prev) => {
+      // Always persist to localStorage
       const list = prev[monthNum] ? [...prev[monthNum]] : [];
-      return { ...prev, [monthNum]: [...list, amtNum] };
+      const updated = { ...prev, [monthNum]: [...list, amtNum] };
+      try {
+        localStorage.setItem('emi_actual_payments', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
     });
     setEntry({ month: '', amount: '' });
   };
@@ -57,6 +68,9 @@ export default function ActualPaymentScreen({ schedule }) {
       const result = { ...prev };
       if (list.length) result[month] = list;
       else delete result[month];
+      try {
+        localStorage.setItem('emi_actual_payments', JSON.stringify(result));
+      } catch (e) {}
       return result;
     });
   };
@@ -83,6 +97,45 @@ export default function ActualPaymentScreen({ schedule }) {
   // Helper to keep only digits
   const parseNumber = (str) => str.replace(/[^\d]/g, '');
 
+  // Grouped/aggregated payments by month
+  const paymentTable = Object.entries(payments)
+    .sort((a, b) => Number(a[0]) - Number(b[0]))
+    .map(([month, arr]) => {
+      const totalPaid = arr.reduce((sum, amt) => sum + amt, 0);
+      const scheduled = getScheduledForMonth(month);
+      const diff = totalPaid - scheduled;
+      return {
+        month,
+        totalPaid,
+        scheduled,
+        diff,
+        payments: arr,
+      };
+    });
+
+  // Group by year if needed
+  const paymentTableByYear = (() => {
+    const byYear = {};
+    for (const [month, arr] of Object.entries(payments)) {
+      const year = Math.ceil(Number(month) / 12);
+      if (!byYear[year]) byYear[year] = [];
+      byYear[year].push({ month, arr });
+    }
+    return Object.entries(byYear).map(([year, months]) => {
+      const allPayments = months.flatMap(m => m.arr);
+      const totalPaid = allPayments.reduce((sum, amt) => sum + amt, 0);
+      const scheduled = months.reduce((sum, m) => sum + getScheduledForMonth(m.month), 0);
+      const diff = totalPaid - scheduled;
+      return {
+        year,
+        totalPaid,
+        scheduled,
+        diff,
+        months,
+      };
+    }).sort((a, b) => Number(a.year) - Number(b.year));
+  })();
+
   return (
     <Box sx={{ mb: 4 }}>
       <Paper sx={{ p: { xs: 2, sm: 4 }, mb: 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', maxWidth: 800, mx: 'auto', width: '100%', background: '#FFF' }} elevation={6} className="card">
@@ -95,7 +148,7 @@ export default function ActualPaymentScreen({ schedule }) {
           </Tooltip>
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
-          <Grid item xs={12} sm={3}>
+          <Grid xs={12} sm={3}>
             <TextField
               label={<span>Month # <Tooltip title="Month number for payment"><IconButton size="small"><InfoOutlinedIcon fontSize="small" /></IconButton></Tooltip></span>}
               variant="outlined"
@@ -110,7 +163,7 @@ export default function ActualPaymentScreen({ schedule }) {
               helperText={!!error && (!entry.month || isNaN(parseInt(entry.month, 10))) ? error : ''}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <TextField
               label={<span>Payment Amount <Tooltip title="Overpayments reduce interest and tenure"><IconButton size="small"><InfoOutlinedIcon fontSize="small" /></IconButton></Tooltip></span>}
               variant="outlined"
@@ -131,7 +184,7 @@ export default function ActualPaymentScreen({ schedule }) {
               helperText={!!error && (!entry.amount || isNaN(parseFloat(entry.amount))) ? error : ''}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid xs={12} sm={3}>
             <Button
               variant="contained"
               color="primary"
@@ -144,47 +197,18 @@ export default function ActualPaymentScreen({ schedule }) {
             </Button>
           </Grid>
           {error && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Alert severity="warning" sx={{ mt: 1 }}>{error}</Alert>
             </Grid>
           )}
         </Grid>
-        {Object.keys(payments).length > 0 && (
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1, color: 'text.secondary' }}>
-              Payments Made
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {Object.entries(payments).map(([month, arr]) =>
-                arr.map((amt, idx) => {
-                  const scheduled = getScheduledForMonth(month);
-                  let info = '';
-                  if (amt < scheduled) {
-                    info = `Short by ${formatCurrency(scheduled - amt)}`;
-                  } else if (amt > scheduled) {
-                    info = `Saved ${formatCurrency(amt - scheduled)}`;
-                  }
-                  return (
-                    <Chip
-                      key={`${month}-${idx}`}
-                      label={`Month ${month}: ${formatCurrency(amt)}${info ? ' (' + info + ')' : ''}`}
-                      onDelete={() => removePayment(Number(month), idx)}
-                      color={amt < scheduled ? 'warning' : amt > scheduled ? 'success' : 'secondary'}
-                      sx={{ fontWeight: 600, fontSize: 15, px: 1.5, py: 1, borderRadius: 2, background: amt < scheduled ? '#fff3e0' : amt > scheduled ? '#e8f5e9' : '#e3f2fd', color: '#4B5563' }}
-                    />
-                  );
-                })
-              )}
-            </Box>
-          </Box>
-        )}
       </Paper>
       <Paper sx={{ p: { xs: 2, sm: 4 }, mb: 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', maxWidth: 800, mx: 'auto', width: '100%', background: '#FFF' }} elevation={6} className="card">
         <Typography variant="h5" fontWeight={700} color="primary.main" gutterBottom sx={{ mb: 3 }}>
           Payment Summary
         </Typography>
         <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+          <Grid xs={12} sm={4} md={4} lg={4} xl={4}>
             <Box sx={{
               background: 'linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%)',
               borderRadius: 2,
@@ -199,7 +223,7 @@ export default function ActualPaymentScreen({ schedule }) {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+          <Grid xs={12} sm={4} md={4} lg={4} xl={4}>
             <Box sx={{
               background: 'linear-gradient(90deg, #f1f8e9 0%, #c8e6c9 100%)',
               borderRadius: 2,
@@ -214,7 +238,7 @@ export default function ActualPaymentScreen({ schedule }) {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+          <Grid xs={12} sm={4} md={4} lg={4} xl={4}>
             <Box sx={{
               background: 'linear-gradient(90deg, #fff3e0 0%, #ffe0b2 100%)',
               borderRadius: 2,
@@ -230,6 +254,93 @@ export default function ActualPaymentScreen({ schedule }) {
             </Box>
           </Grid>
         </Grid>
+      </Paper>
+      <Paper sx={{ p: { xs: 2, sm: 4 }, mb: 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', maxWidth: 800, mx: 'auto', width: '100%', background: '#FFF' }} elevation={6} className="card">
+        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+          <Button variant={historyView === 'month' ? 'contained' : 'outlined'} onClick={() => setHistoryView('month')}>By Month</Button>
+          <Button variant={historyView === 'year' ? 'contained' : 'outlined'} onClick={() => setHistoryView('year')}>By Year</Button>
+        </Box>
+        <Typography variant="h6" fontWeight={700} color="primary.main" gutterBottom sx={{ mb: 2 }}>
+          Payment History ({historyView === 'month' ? 'by Month' : 'by Year'})
+        </Typography>
+        <Box sx={{ overflowX: 'auto' }}>
+          {historyView === 'month' ? (
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, minWidth: 400, fontSize: 15, background: 'var(--color-bg)', borderRadius: 12, boxShadow: 'var(--shadow-sm)' }}>
+              <thead>
+                <tr style={{ background: 'var(--color-table-header)' }}>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16, borderTopLeftRadius: 12 }}>Month</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16 }}>Payments</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16 }}>Total Paid</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16 }}>Scheduled</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16, borderTopRightRadius: 12 }}>Extra / Short</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paymentTable.map((row, i) => (
+                  <React.Fragment key={row.month}>
+                    <tr style={{
+                      borderBottom: '1px solid var(--color-neutral-mid)',
+                      cursor: 'pointer',
+                      background: expandedMonth === row.month ? 'var(--color-table-header)' : i % 2 === 0 ? 'var(--color-bg)' : 'var(--color-table-row-alt)',
+                      transition: 'background 0.2s'
+                    }} onClick={() => setExpandedMonth(expandedMonth === row.month ? null : row.month)}>
+                      <td style={{ padding: '10px 8px', fontWeight: 600, color: '#2563eb', borderLeft: '4px solid #2563eb', borderRadius: expandedMonth === row.month ? '8px 0 0 8px' : 0 }}>{row.month}</td>
+                      <td style={{ padding: '10px 8px', textAlign: 'right' }}>{row.payments.length}</td>
+                      <td style={{ padding: '10px 8px', textAlign: 'right', fontWeight: 600 }}>{formatCurrency(row.totalPaid)}</td>
+                      <td style={{ padding: '10px 8px', textAlign: 'right' }}>{formatCurrency(row.scheduled)}</td>
+                      <td style={{ padding: '10px 8px', textAlign: 'right', fontWeight: 600, color: row.diff > 0 ? '#388e3c' : row.diff < 0 ? '#d32f2f' : '#333' }}>
+                        {row.diff > 0 ? `+${formatCurrency(row.diff)}` : row.diff < 0 ? formatCurrency(row.diff) : '—'}
+                      </td>
+                    </tr>
+                    {expandedMonth === row.month && (
+                      <tr>
+                        <td colSpan={5} style={{ background: 'var(--color-table-header)', padding: '10px 24px', borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}>
+                          <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                            {payments[row.month].map((amt, idx) => (
+                              <li key={idx} style={{ marginBottom: 6, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 12 }}>
+                                <span style={{ color: '#2563eb', fontWeight: 600 }}>Payment {idx + 1}:</span>
+                                <span style={{ color: 'var(--color-accent)', fontWeight: 700 }}>{formatCurrency(amt)}</span>
+                                <span style={{ color: '#888', fontSize: 13, marginLeft: 'auto' }}>({new Date().toLocaleDateString()})</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, minWidth: 400, fontSize: 15, background: 'var(--color-bg)', borderRadius: 12, boxShadow: 'var(--shadow-sm)' }}>
+              <thead>
+                <tr style={{ background: 'var(--color-table-header)' }}>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16, borderTopLeftRadius: 12 }}>Year</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16 }}>Months</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16 }}>Total Paid</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16 }}>Scheduled</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'right', fontWeight: 700, color: 'var(--color-primary)', fontSize: 16, borderTopRightRadius: 12 }}>Extra / Short</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paymentTableByYear.map((row, i) => (
+                  <tr key={row.year} style={{
+                    borderBottom: '1px solid var(--color-neutral-mid)',
+                    background: i % 2 === 0 ? 'var(--color-bg)' : 'var(--color-table-row-alt)',
+                  }}>
+                    <td style={{ padding: '10px 8px', fontWeight: 600, color: '#2563eb', borderLeft: '4px solid #2563eb', borderRadius: 0 }}>{row.year}</td>
+                    <td style={{ padding: '10px 8px', textAlign: 'right' }}>{row.months.length}</td>
+                    <td style={{ padding: '10px 8px', textAlign: 'right', fontWeight: 600 }}>{formatCurrency(row.totalPaid)}</td>
+                    <td style={{ padding: '10px 8px', textAlign: 'right' }}>{formatCurrency(row.scheduled)}</td>
+                    <td style={{ padding: '10px 8px', textAlign: 'right', fontWeight: 600, color: row.diff > 0 ? '#388e3c' : row.diff < 0 ? '#d32f2f' : '#333' }}>
+                      {row.diff > 0 ? `+${formatCurrency(row.diff)}` : row.diff < 0 ? formatCurrency(row.diff) : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Box>
       </Paper>
     </Box>
   );

@@ -1,4 +1,5 @@
-import { TextField, Grid, Box, InputAdornment, Tooltip, IconButton, Alert, Button } from '@mui/material';
+import { TextField, Box, InputAdornment, Tooltip, IconButton, Alert, Button } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { formatNumber } from '../utils/format';
 import { useEffect, useState } from 'react';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -26,7 +27,7 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
   return (
     <Box className="extra-payment-form card" sx={{ mb: 2, width: '100%', background: 'var(--color-bg)', color: 'var(--color-secondary)', boxShadow: 'var(--shadow-elevation)' }}>
       <Grid container spacing={3} alignItems="center" justifyContent="center">
-        <Grid item xs={12} sm={3}>
+        <Grid xs={12} sm={3}>
           <TextField
             label={<span>Month # <Tooltip title="Month number for extra payment"><IconButton size="small"><InfoOutlinedIcon fontSize="small" /></IconButton></Tooltip></span>}
             variant="outlined"
@@ -40,7 +41,7 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
             helperText={!!error && (!extraPayment.month || isNaN(parseInt(extraPayment.month, 10))) ? error : ''}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid xs={12} sm={4}>
           <TextField
             label={<span>Extra Amount <Tooltip title="Extra payment reduces interest and tenure"><IconButton size="small"><InfoOutlinedIcon fontSize="small" /></IconButton></Tooltip></span>}
             variant="outlined"
@@ -60,7 +61,7 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
             helperText={!!error && (!extraPayment.amount || isNaN(parseFloat(extraPayment.amount))) ? error : ''}
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid xs={12} sm={3}>
           <Button
             variant="contained"
             color="primary"
@@ -74,7 +75,7 @@ export default function ExtraPaymentForm({ extraPayment, setExtraPayment, addExt
           </Button>
         </Grid>
         {error && (
-          <Grid item xs={12}>
+        <Grid xs={12}>
             <Alert severity="warning" sx={{ mt: 1 }}>{error}</Alert>
           </Grid>
         )}

@@ -10,14 +10,14 @@ import {
   useTheme,
   Button,
   Tooltip,
-  IconButton
+  IconButton,
+  Paper
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { formatCurrency, formatNumber } from '../utils/format';
-import { FixedSizeList as List } from 'react-window';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useState } from 'react';
@@ -113,32 +113,6 @@ export default function PaymentSchedule({ schedule, locale = 'en-IN', loanDetail
     doc.save('emi-schedule.pdf');
   };
 
-  // Virtualized row renderer
-  const Row = ({ index, style }) => {
-    const row = schedule[index];
-    return (
-      <TableRow
-        key={row.month}
-        style={style}
-        sx={{
-          background: index % 2 === 1 ? '#FAFAFB' : '#FFF',
-          '&:hover': { backgroundColor: '#E5E7EB' },
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          minWidth: 760,
-        }}
-      >
-        <TableCell sx={{ fontWeight: 500, p: 2, flex: 1, minWidth: 80, borderBottom: '1px solid #E5E7EB' }}>{formatNumber(row.month)}</TableCell>
-        {visibleCols.emi && <TableCell align="right" sx={{ fontWeight: 500, p: 2, flex: 1, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.emi)}</TableCell>}
-        {visibleCols.extra && <TableCell align="right" sx={{ fontWeight: 500, p: 2, flex: 1, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.extra)}</TableCell>}
-        {visibleCols.interest && <TableCell align="right" sx={{ fontWeight: 500, p: 2, flex: 1, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.interest)}</TableCell>}
-        {visibleCols.principal && <TableCell align="right" sx={{ fontWeight: 500, p: 2, flex: 1, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.principalPaid)}</TableCell>}
-        {visibleCols.remaining && <TableCell align="right" sx={{ fontWeight: 500, p: 2, flex: 1, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.principalLeft)}</TableCell>}
-      </TableRow>
-    );
-  };
-
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto', mb: 4, width: '100%' }} className="payment-schedule-container card">
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
@@ -206,30 +180,37 @@ export default function PaymentSchedule({ schedule, locale = 'en-IN', loanDetail
         ))}
       </Box>
       <TableContainer
-        component={Box}
+        component={Paper}
         sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', background: '#FFF', width: '100%', maxHeight: 420, overflowY: 'auto' }}
       >
         <Table size="small" stickyHeader sx={{ minWidth: 760, tableLayout: 'fixed', width: '100%' }}>
           <TableHead>
-            <TableRow sx={{ background: '#F3F4F6', display: 'flex', minWidth: 760 }} className="sticky-header">
-              <TableCell sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, flex: 1, minWidth: 80 }}>Month</TableCell>
-              {visibleCols.emi && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, flex: 1, minWidth: 100 }}>EMI</TableCell>}
-              {visibleCols.extra && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, flex: 1, minWidth: 100 }}>Extra</TableCell>}
-              {visibleCols.interest && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, flex: 1, minWidth: 100 }}>Interest</TableCell>}
-              {visibleCols.principal && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, flex: 1, minWidth: 100 }}>Principal</TableCell>}
-              {visibleCols.remaining && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, flex: 1, minWidth: 100 }}>Remaining</TableCell>}
+            <TableRow sx={{ background: '#F3F4F6' }} className="sticky-header">
+              <TableCell sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, minWidth: 80 }}>Month</TableCell>
+              {visibleCols.emi && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, minWidth: 100 }}>EMI</TableCell>}
+              {visibleCols.extra && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, minWidth: 100 }}>Extra</TableCell>}
+              {visibleCols.interest && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, minWidth: 100 }}>Interest</TableCell>}
+              {visibleCols.principal && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, minWidth: 100 }}>Principal</TableCell>}
+              {visibleCols.remaining && <TableCell align="right" sx={{ color: '#4B5563', fontWeight: 700, fontSize: 16, letterSpacing: 1, p: 2, minWidth: 100 }}>Remaining</TableCell>}
             </TableRow>
           </TableHead>
-          <TableBody sx={{ display: 'block', width: '100%' }}>
-            <List
-              height={360}
-              itemCount={schedule.length}
-              itemSize={48}
-              width={760}
-              style={{ overflowX: 'auto' }}
-            >
-              {Row}
-            </List>
+          <TableBody>
+            {schedule.map((row, index) => (
+              <TableRow
+                key={row.month}
+                sx={{
+                  background: index % 2 === 1 ? '#FAFAFB' : '#FFF',
+                  '&:hover': { backgroundColor: '#E5E7EB' },
+                }}
+              >
+                <TableCell sx={{ fontWeight: 500, p: 2, minWidth: 80, borderBottom: '1px solid #E5E7EB' }}>{formatNumber(row.month)}</TableCell>
+                {visibleCols.emi && <TableCell align="right" sx={{ fontWeight: 500, p: 2, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.emi)}</TableCell>}
+                {visibleCols.extra && <TableCell align="right" sx={{ fontWeight: 500, p: 2, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.extra)}</TableCell>}
+                {visibleCols.interest && <TableCell align="right" sx={{ fontWeight: 500, p: 2, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.interest)}</TableCell>}
+                {visibleCols.principal && <TableCell align="right" sx={{ fontWeight: 500, p: 2, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.principalPaid)}</TableCell>}
+                {visibleCols.remaining && <TableCell align="right" sx={{ fontWeight: 500, p: 2, minWidth: 100, borderBottom: '1px solid #E5E7EB' }}>{formatCurrency(row.principalLeft)}</TableCell>}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

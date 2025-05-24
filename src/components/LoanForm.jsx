@@ -1,6 +1,6 @@
 // LoanForm.jsx
 import { useState } from 'react';
-import { TextField, Button, Grid, Box, InputAdornment, Slider, Tooltip, IconButton, Typography, MenuItem, Select, Stepper, Step, StepLabel, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { TextField, Button, Box, InputAdornment, Slider, Tooltip, IconButton, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { formatNumber, formatCurrency } from '../utils/format';
 
@@ -15,7 +15,6 @@ const LOCALES = [
 export default function LoanForm({ loanDetails, setLoanDetails, locale, setLocale }) {
   // Validation states
   const [errors, setErrors] = useState({});
-  const [activeStep, setActiveStep] = useState(0);
   const [emiInfoOpen, setEmiInfoOpen] = useState(false);
   const steps = [
     {
@@ -218,66 +217,11 @@ export default function LoanForm({ loanDetails, setLoanDetails, locale, setLocal
             ))}
           </Select>
         </Box>
-        {/* Stepper for mobile */}
-        <Box className="loan-form-stepper" sx={{ display: { xs: 'block', sm: 'none' } }}>
-          <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((step, idx) => (
-              <Step key={step.label} completed={activeStep > idx}>
-                <StepLabel>{step.label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Box sx={{ my: 3 }}>{steps[activeStep].render()}</Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-            <Button
-              disabled={activeStep === 0}
-              onClick={() => setActiveStep((s) => Math.max(0, s - 1))}
-              variant="outlined"
-              aria-label="Previous step"
-            >
-              Back
-            </Button>
-            {activeStep < steps.length - 1 ? (
-              <Button
-                onClick={() => setActiveStep((s) => Math.min(steps.length - 1, s + 1))}
-                variant="contained"
-                aria-label="Next step"
-              >
-                Next
-              </Button>
-            ) : null}
-          </Box>
-        </Box>
-        {/* Multi-column grid for desktop */}
-        <Grid container spacing={3} alignItems="center" justifyContent="center" className="loan-form-grid" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-          <Grid item xs={12} sm={4}>{steps[0].render()}</Grid>
-          <Grid item xs={12} sm={3}>{steps[1].render()}</Grid>
-          <Grid item xs={12} sm={3}>{steps[2].render()}</Grid>
-        </Grid>
+        {/* Simple form fields, no stepper or pagination */}
+        <Box sx={{ mb: 3 }}>{steps[0].render()}</Box>
+        <Box sx={{ mb: 3 }}>{steps[1].render()}</Box>
+        <Box sx={{ mb: 3 }}>{steps[2].render()}</Box>
       </Box>
-      {/* EMI Info Modal */}
-      <Dialog open={emiInfoOpen} onClose={() => setEmiInfoOpen(false)} aria-labelledby="emi-info-title">
-        <DialogTitle id="emi-info-title">What is EMI?</DialogTitle>
-        <DialogContent>
-          <Typography gutterBottom>
-            <b>EMI (Equated Monthly Installment)</b> is the fixed payment you make every month to repay your loan. It is calculated using the formula:
-          </Typography>
-          <Box sx={{ background: '#f3f6fb', borderRadius: 2, p: 2, mb: 2 }}>
-            <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-              EMI = [P × r × (1 + r)<sup>n</sup>] / [(1 + r)<sup>n</sup> – 1]
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Where P = principal, r = monthly interest rate, n = total payments (months)
-            </Typography>
-          </Box>
-          <Typography variant="body2" color="text.secondary">
-            <b>Assumptions:</b> Interest is compounded monthly. EMI remains fixed unless you make extra payments. Actual lender terms may vary.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEmiInfoOpen(false)} color="primary">Close</Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { Paper, Typography, Grid, Box } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { formatCurrency, formatNumber } from '../utils/format';
 import useCountUp from './useCountUp';
 
@@ -9,7 +10,13 @@ export default function LoanSummary({ schedule, loanDetails, locale = 'en-IN' })
   const originalEMI = schedule[0].emi;
   const originalTotalInterest = originalEMI * originalMonths - loanDetails.amount;
   const interestSaved = originalTotalInterest - totalInterest;
-  const monthsReduced = originalMonths - actualMonths;
+
+  // Only count months reduced if extra payments were made and schedule is shorter
+  let monthsReduced = originalMonths - actualMonths;
+  if (monthsReduced < 0) monthsReduced = 0;
+  // If no extra payments (all schedule[].extra are 0), force monthsReduced = 0
+  const anyExtra = schedule.some(row => row.extra && row.extra > 0);
+  if (!anyExtra) monthsReduced = 0;
 
   // Animated values
   const animatedEMI = useCountUp(Math.round(originalEMI));
@@ -57,19 +64,19 @@ export default function LoanSummary({ schedule, loanDetails, locale = 'en-IN' })
         </Typography>
       </Box>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">EMI</Typography>
           <Typography variant="h4" fontWeight={700} color="primary.main" sx={{ fontSize: 28, mb: 0.5 }}>{formatCurrency(animatedEMI, locale, currency)}</Typography>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">Total Interest Paid</Typography>
           <Typography variant="h6" fontWeight={700} color="neutral.dark">{formatCurrency(animatedInterest, locale, currency)}</Typography>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">Interest Saved</Typography>
           <Typography variant="h6" fontWeight={700} color="success.main">{formatCurrency(animatedSaved, locale, currency)}</Typography>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">Tenure Reduced</Typography>
           <Typography variant="h6" fontWeight={700} color="neutral.dark">{formatNumber(animatedMonths, locale)} months</Typography>
         </Grid>

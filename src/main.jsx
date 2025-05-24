@@ -18,6 +18,10 @@ function Main() {
   })
 
   useEffect(() => {
+    console.log('First render, setting theme mode:', mode)
+  }, [])
+
+  useEffect(() => {
     localStorage.setItem('themeMode', mode)
     setBodyTheme(mode)
   }, [mode])
@@ -73,6 +77,13 @@ createRoot(document.getElementById('root')).render(
 // Register service worker for offline EMI calculations
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js');
+    navigator.serviceWorker.register('/service-worker.js').then(() => {
+      // Force page reload when a new service worker takes control
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          window.location.reload();
+        });
+      }
+    });
   });
 }

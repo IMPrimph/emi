@@ -25,6 +25,51 @@ function App() {
   const [tab, setTab] = useState(0);
   const [locale, setLocale] = useState('en-IN');
 
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const storedLoan = localStorage.getItem('emi_loan_details');
+      const storedExtras = localStorage.getItem('emi_extra_payments');
+      const storedLocale = localStorage.getItem('emi_locale');
+      console.log('Loaded from localStorage:', {
+        loan: storedLoan,
+        extras: storedExtras,
+        locale: storedLocale,
+        parsedLoan: storedLoan ? JSON.parse(storedLoan) : null,
+        parsedExtras: storedExtras ? JSON.parse(storedExtras) : null,
+        parsedLocale: storedLocale ? storedLocale : null,
+      })
+      if (storedLoan) setLoanDetails(JSON.parse(storedLoan));
+      if (storedExtras) setExtraPayments(JSON.parse(storedExtras));
+      if (storedLocale) setLocale(storedLocale);
+    } catch (e) {
+      console.error('Error loading from localStorage:', e);
+    }
+  }, []);
+
+  // Save loanDetails to localStorage
+  useEffect(() => {
+    if (!loanDetails.amount && !loanDetails.rate && !loanDetails.tenure) return;
+    console.log('Saving loanDetails to localStorage:', loanDetails);
+    try {
+      localStorage.setItem('emi_loan_details', JSON.stringify(loanDetails));
+    } catch {}
+  }, [loanDetails]);
+
+  // Save extraPayments to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('emi_extra_payments', JSON.stringify(extraPayments));
+    } catch {}
+  }, [extraPayments]);
+
+  // Save locale to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('emi_locale', locale);
+    } catch {}
+  }, [locale]);
+
   useEffect(() => {
     const { amount, rate, tenure } = loanDetails;
     const amt = parseFloat(amount) || 0;
@@ -115,7 +160,7 @@ function App() {
             {tab === 0 && (
               <div className="fade-in">
                 <Grid container spacing={3} sx={{ mb: 3, maxWidth: 900, mx: 'auto', width: '100%' }}>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 6, width: '100%', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} elevation={6}>
                       <ExtraPaymentForm
                         extraPayment={extraPayment}
@@ -145,13 +190,13 @@ function App() {
                       )}
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 6, width: '100%', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'center' }} elevation={6}>
                       <LoanSummary schedule={schedule} loanDetails={loanDetails} locale={locale} />
                     </Paper>
                   </Grid>
                   {/* Amortization Chart */}
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <AmortizationChart schedule={schedule} />
                   </Grid>
                 </Grid>
