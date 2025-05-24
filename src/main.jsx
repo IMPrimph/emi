@@ -22,6 +22,7 @@ function Main() {
   }, [])
 
   useEffect(() => {
+    console.log('Setting theme mode:', mode)
     localStorage.setItem('themeMode', mode)
     setBodyTheme(mode)
   }, [mode])
@@ -73,17 +74,3 @@ createRoot(document.getElementById('root')).render(
     <Main />
   </StrictMode>,
 )
-
-// Register service worker for offline EMI calculations
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').then(() => {
-      // Force page reload when a new service worker takes control
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          window.location.reload();
-        });
-      }
-    });
-  });
-}

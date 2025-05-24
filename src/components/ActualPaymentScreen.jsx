@@ -32,14 +32,6 @@ export default function ActualPaymentScreen({ schedule }) {
     }
   }, []);
 
-  // Save payments to localStorage whenever they change
-  useEffect(() => {
-    try {
-      localStorage.setItem('emi_actual_payments', JSON.stringify(payments));
-    } catch (e) {
-      // fallback: do nothing
-    }
-  }, [payments]);
 
   const addPayment = () => {
     const monthNum = parseInt(entry.month, 10);

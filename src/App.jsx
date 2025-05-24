@@ -58,6 +58,7 @@ function App() {
 
   // Save extraPayments to localStorage
   useEffect(() => {
+    if (Object.keys(extraPayments).length === 0) return;
     try {
       localStorage.setItem('emi_extra_payments', JSON.stringify(extraPayments));
     } catch {}
@@ -65,6 +66,7 @@ function App() {
 
   // Save locale to localStorage
   useEffect(() => {
+    if (!locale) return;
     try {
       localStorage.setItem('emi_locale', locale);
     } catch {}
