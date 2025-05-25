@@ -44,6 +44,7 @@ function Main() {
             primary: mode === 'dark' ? '#F1F5F9' : '#0F172A',
             secondary: mode === 'dark' ? '#CBD5E1' : '#475569',
           },
+          divider: mode === 'dark' ? '#334155' : '#E2E8F0',
         },
         typography: {
           fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -52,17 +53,39 @@ function Main() {
             fontSize: '2.5rem',
             lineHeight: 1.2,
             letterSpacing: '-0.02em',
+            color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
           },
           h2: {
             fontWeight: 700,
             fontSize: '2rem',
             lineHeight: 1.2,
             letterSpacing: '-0.01em',
+            color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
           },
-          h3: { fontWeight: 600, fontSize: '1.75rem', lineHeight: 1.2 },
-          h4: { fontWeight: 600, fontSize: '1.5rem', lineHeight: 1.2 },
-          h5: { fontWeight: 600, fontSize: '1.25rem', lineHeight: 1.2 },
-          h6: { fontWeight: 600, fontSize: '1rem', lineHeight: 1.2 },
+          h3: { 
+            fontWeight: 600, 
+            fontSize: '1.75rem', 
+            lineHeight: 1.2,
+            color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+          },
+          h4: { 
+            fontWeight: 600, 
+            fontSize: '1.5rem', 
+            lineHeight: 1.2,
+            color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+          },
+          h5: { 
+            fontWeight: 600, 
+            fontSize: '1.25rem', 
+            lineHeight: 1.2,
+            color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+          },
+          h6: { 
+            fontWeight: 600, 
+            fontSize: '1rem', 
+            lineHeight: 1.2,
+            color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+          },
           button: {
             textTransform: 'none',
             fontWeight: 500,
@@ -72,6 +95,14 @@ function Main() {
           borderRadius: 12,
         },
         components: {
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                backgroundColor: mode === 'dark' ? '#0F172A' : '#F8FAFC',
+                color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+              },
+            },
+          },
           MuiButton: {
             styleOverrides: {
               root: {
@@ -82,6 +113,7 @@ function Main() {
                 boxShadow: 'none',
                 '&:hover': {
                   boxShadow: 'none',
+                  opacity: 0.9,
                 },
               },
             },
@@ -90,6 +122,8 @@ function Main() {
             styleOverrides: {
               root: {
                 backgroundImage: 'none',
+                backgroundColor: mode === 'dark' ? '#1E293B' : '#FFFFFF',
+                borderColor: mode === 'dark' ? '#334155' : '#E2E8F0',
               },
             },
           },
@@ -97,7 +131,8 @@ function Main() {
             styleOverrides: {
               root: {
                 borderRadius: 16,
-                border: `1px solid ${mode === 'dark' ? '#2D3748' : '#E2E8F0'}`,
+                border: `1px solid ${mode === 'dark' ? '#334155' : '#E2E8F0'}`,
+                backgroundColor: mode === 'dark' ? '#1E293B' : '#FFFFFF',
               },
             },
           },
@@ -106,7 +141,36 @@ function Main() {
               root: {
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 8,
+                  backgroundColor: mode === 'dark' ? '#1E293B' : '#FFFFFF',
+                  '& fieldset': {
+                    borderColor: mode === 'dark' ? '#334155' : '#E2E8F0',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: mode === 'dark' ? '#60A5FA' : '#3B82F6',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: mode === 'dark' ? '#60A5FA' : '#3B82F6',
+                  },
                 },
+              },
+            },
+          },
+          MuiTableCell: {
+            styleOverrides: {
+              root: {
+                borderBottom: `1px solid ${mode === 'dark' ? '#334155' : '#E2E8F0'}`,
+              },
+              head: {
+                backgroundColor: mode === 'dark' ? '#1E293B' : '#F8FAFC',
+                color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+              },
+            },
+          },
+          MuiTooltip: {
+            styleOverrides: {
+              tooltip: {
+                backgroundColor: mode === 'dark' ? '#2D3748' : '#1E293B',
+                color: '#F8FAFC',
               },
             },
           },
