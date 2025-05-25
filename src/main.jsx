@@ -45,6 +45,10 @@ function Main() {
             secondary: mode === 'dark' ? '#CBD5E1' : '#475569',
           },
           divider: mode === 'dark' ? '#334155' : '#E2E8F0',
+          action: {
+            active: mode === 'dark' ? '#60A5FA' : '#2563eb',
+            hover: mode === 'dark' ? '#1E293B' : '#F1F5F9',
+          },
         },
         typography: {
           fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -115,6 +119,20 @@ function Main() {
                   boxShadow: 'none',
                   opacity: 0.9,
                 },
+                '&.MuiButton-contained': {
+                  backgroundColor: mode === 'dark' ? '#60A5FA' : '#2563eb',
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    backgroundColor: mode === 'dark' ? '#3B82F6' : '#1D4ED8',
+                  },
+                },
+                '&.MuiButton-outlined': {
+                  borderColor: mode === 'dark' ? '#60A5FA' : '#2563eb',
+                  color: mode === 'dark' ? '#60A5FA' : '#2563eb',
+                  '&:hover': {
+                    backgroundColor: mode === 'dark' ? 'rgba(96, 165, 250, 0.1)' : 'rgba(37, 99, 235, 0.1)',
+                  },
+                },
               },
             },
           },
@@ -152,6 +170,12 @@ function Main() {
                     borderColor: mode === 'dark' ? '#60A5FA' : '#3B82F6',
                   },
                 },
+                '& .MuiInputLabel-root': {
+                  color: mode === 'dark' ? '#CBD5E1' : '#475569',
+                },
+                '& .MuiInputBase-input': {
+                  color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+                },
               },
             },
           },
@@ -159,10 +183,12 @@ function Main() {
             styleOverrides: {
               root: {
                 borderBottom: `1px solid ${mode === 'dark' ? '#334155' : '#E2E8F0'}`,
+                color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
               },
               head: {
                 backgroundColor: mode === 'dark' ? '#1E293B' : '#F8FAFC',
                 color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+                fontWeight: 600,
               },
             },
           },
@@ -171,6 +197,43 @@ function Main() {
               tooltip: {
                 backgroundColor: mode === 'dark' ? '#2D3748' : '#1E293B',
                 color: '#F8FAFC',
+                fontSize: '0.875rem',
+                padding: '8px 12px',
+                borderRadius: 6,
+              },
+            },
+          },
+          MuiChip: {
+            styleOverrides: {
+              root: {
+                backgroundColor: mode === 'dark' ? '#2D3748' : '#F1F5F9',
+                color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+                '&.MuiChip-clickable:hover': {
+                  backgroundColor: mode === 'dark' ? '#374151' : '#E2E8F0',
+                },
+              },
+              deleteIcon: {
+                color: mode === 'dark' ? '#CBD5E1' : '#64748B',
+                '&:hover': {
+                  color: mode === 'dark' ? '#F1F5F9' : '#0F172A',
+                },
+              },
+            },
+          },
+          MuiSlider: {
+            styleOverrides: {
+              root: {
+                color: mode === 'dark' ? '#60A5FA' : '#2563eb',
+              },
+              thumb: {
+                backgroundColor: '#FFFFFF',
+                border: `2px solid ${mode === 'dark' ? '#60A5FA' : '#2563eb'}`,
+              },
+              track: {
+                backgroundColor: mode === 'dark' ? '#60A5FA' : '#2563eb',
+              },
+              rail: {
+                backgroundColor: mode === 'dark' ? '#334155' : '#E2E8F0',
               },
             },
           },

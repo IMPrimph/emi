@@ -1,6 +1,6 @@
 /* Design System */
 :root {
-  /* Colors - Professional palette */
+  /* Colors */
   --color-primary: #2563eb;
   --color-secondary: #3b82f6;
   --color-accent: #6366f1;
@@ -171,7 +171,6 @@ button,
   padding: var(--spacing-2) var(--spacing-6) !important;
   border-radius: var(--radius-md) !important;
   transition: var(--transition-all);
-  text-transform: none !important;
   letter-spacing: 0.025em !important;
   box-shadow: var(--shadow-sm) !important;
   background: var(--color-primary) !important;
