@@ -1,9 +1,9 @@
 /* Design System */
 :root {
   /* Colors */
-  --color-primary: #2563eb;
-  --color-secondary: #3b82f6;
-  --color-accent: #6366f1;
+  --color-primary: #6366F1;
+  --color-secondary: #64748b;
+  --color-accent: #f59e42;
   --color-success: #059669;
   --color-danger: #dc2626;
   --color-warning: #f59e0b;
@@ -22,13 +22,13 @@
   --color-neutral-900: #0f172a;
 
   /* Semantic colors */
-  --color-bg: var(--color-neutral-50);
+  --color-bg: #f8fafc;
   --color-text: var(--color-neutral-900);
   --color-text-secondary: var(--color-neutral-600);
-  --color-border: var(--color-neutral-200);
-  --color-input-bg: white;
-  --color-input-border: var(--color-neutral-300);
-  --color-input-focus: var(--color-primary);
+  --color-border: #e5e7eb;
+  --color-input-bg: #f3f6fb;
+  --color-input-border: #e5e7eb;
+  --color-input-focus: #6366F1;
 
   /* Chart Colors */
   --chart-bar-principal: rgba(37, 99, 235, 0.85);
@@ -37,7 +37,7 @@
   --chart-line-outflow-bg: rgba(220, 38, 38, 0.1);
 
   /* Typography */
-  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family: 'Poppins', 'Inter', Arial, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -114,36 +114,41 @@
 /* Base styles */
 body {
   font-family: var(--font-family);
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-bg);
+  color: var(--color-secondary);
   line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-bold);
-  line-height: 1.2;
+  color: var(--color-primary);
   margin-bottom: var(--spacing-4);
-  color: var(--color-text);
+  line-height: 1.2;
 }
 
 /* Component styles */
-.card {
-  background: var(--color-card-bg, var(--color-input-bg));
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  padding: var(--spacing-6);
-  transition: var(--transition-all);
+.card, .MuiPaper-root {
+  background: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.2rem 1rem;
+  max-width: 100%;
+  margin: 1rem auto;
   border: 1px solid var(--color-border);
+  transition: var(--transition-all);
 }
 
-.card:hover {
-  transform: translateY(-2px);
+.card:hover, .MuiPaper-root:hover {
+  background: var(--color-card-hover);
   box-shadow: var(--shadow-xl);
-  background: var(--color-card-hover, var(--color-input-bg));
+  transform: translateY(-1px) scale(1.01);
 }
 
 /* Form elements */
@@ -153,14 +158,15 @@ input,
   border: 1px solid var(--color-input-border) !important;
   border-radius: var(--radius-md) !important;
   padding: var(--spacing-2) var(--spacing-4) !important;
-  color: var(--color-text) !important;
+  color: var(--color-secondary) !important;
+  font-size: 1rem !important;
   transition: var(--transition-all);
 }
 
 input:focus,
 .MuiInputBase-root.Mui-focused {
   border-color: var(--color-input-focus) !important;
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12) !important;
   outline: none !important;
 }
 
@@ -168,48 +174,41 @@ input:focus,
 button,
 .MuiButton-root {
   font-weight: var(--font-weight-semibold) !important;
-  padding: var(--spacing-2) var(--spacing-6) !important;
-  border-radius: var(--radius-md) !important;
-  transition: var(--transition-all);
-  letter-spacing: 0.025em !important;
-  box-shadow: var(--shadow-sm) !important;
+  border-radius: var(--radius-lg) !important;
   background: var(--color-primary) !important;
-  color: #ffffff !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  padding: var(--spacing-2) var(--spacing-6) !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  transition: var(--transition-all);
 }
 
 button:hover,
 .MuiButton-root:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md) !important;
-  opacity: 0.9;
-}
-
-button:active,
-.MuiButton-root:active {
-  transform: translateY(0);
+  background: var(--color-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.08) !important;
 }
 
 /* Table styles */
-.MuiTableHead-root th {
+.MuiTableContainer-root {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  background: var(--color-card-bg) !important;
+}
+.MuiTableCell-root {
+  padding: 0.5rem 0.5rem !important;
+  font-size: 0.98rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+.MuiTableHead-root .MuiTableCell-root {
+  font-size: 1.05rem !important;
   background: var(--color-table-header) !important;
-  color: var(--color-text) !important;
-  font-weight: var(--font-weight-semibold) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  font-size: var(--font-size-sm) !important;
-  border-bottom: 1px solid var(--color-border) !important;
+  color: var(--color-primary) !important;
+  font-weight: var(--font-weight-bold) !important;
 }
-
-.MuiTableBody-root td {
-  color: var(--color-text) !important;
-  border-bottom: 1px solid var(--color-border) !important;
-}
-
-.MuiTableBody-root tr:nth-child(even) {
-  background: var(--color-table-row-alt);
-}
-
-.MuiTableBody-root tr:hover {
+.MuiTableRow-root:hover {
   background: var(--color-table-hover) !important;
 }
 
@@ -258,47 +257,128 @@ button:active,
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  :root {
-    --spacing-6: 1rem;
-    --spacing-8: 1.5rem;
-  }
-
-  h1 { font-size: var(--font-size-3xl); }
-  h2 { font-size: var(--font-size-2xl); }
-  h3 { font-size: var(--font-size-xl); }
-
-  .card {
-    padding: var(--spacing-4);
-  }
-}
-
-/* Chart customizations */
-.chart-container {
+/* Minimal, modern, responsive loan form redesign */
+.loan-form-container {
   background: var(--color-card-bg);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-6);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  padding: 2.5rem 2rem 2rem 2rem;
+  max-width: 420px;
+  margin: 2.5rem auto 0 auto;
   border: 1px solid var(--color-border);
+  min-width: 0;
+  width: 100%;
+  position: relative;
+  transition: var(--transition-all);
 }
 
-/* Utility classes */
-.text-primary { color: var(--color-primary); }
-.text-secondary { color: var(--color-secondary); }
-.text-accent { color: var(--color-accent); }
-.text-success { color: var(--color-success); }
-.text-danger { color: var(--color-danger); }
-.text-warning { color: var(--color-warning); }
+.loan-form-section {
+  background: transparent;
+  border-radius: var(--radius-lg);
+  padding: 0.7rem 0.5rem 0.5rem 0.5rem !important;
+  margin-bottom: 0.7rem !important;
+  box-shadow: none;
+  transition: var(--transition-all);
+}
 
-.bg-primary { background-color: var(--color-primary); }
-.bg-secondary { background-color: var(--color-secondary); }
-.bg-accent { background-color: var(--color-accent); }
-.bg-success { background-color: var(--color-success); }
-.bg-danger { background-color: var(--color-danger); }
-.bg-warning { background-color: var(--color-warning); }
+.loan-form-section .MuiTypography-subtitle2 {
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
 
-.font-normal { font-weight: var(--font-weight-normal); }
-.font-medium { font-weight: var(--font-weight-medium); }
-.font-semibold { font-weight: var(--font-weight-semibold); }
-.font-bold { font-weight: var(--font-weight-bold); }
+.loan-form-section .MuiSlider-root {
+  margin-bottom: 1.2rem !important;
+  color: var(--color-primary) !important;
+  height: 4px !important;
+}
+
+.loan-form-section .MuiSlider-thumb {
+  width: 18px !important;
+  height: 18px !important;
+  background: var(--color-primary) !important;
+  border: 2px solid #fff !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.10) !important;
+  transition: var(--transition-all);
+}
+
+.loan-form-section .MuiSlider-track {
+  background: var(--color-primary) !important;
+  height: 4px !important;
+}
+
+.loan-form-section .MuiSlider-rail {
+  background: var(--color-neutral-200) !important;
+  opacity: 1 !important;
+  height: 4px !important;
+}
+
+.loan-form-section .MuiInputBase-root {
+  background: var(--color-input-bg) !important;
+  border-radius: var(--radius-lg) !important;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  padding: 0.7rem 1.2rem !important;
+  border: 1.5px solid var(--color-input-border) !important;
+  box-shadow: none !important;
+  margin-bottom: 0.2rem !important;
+  transition: var(--transition-all);
+}
+
+.loan-form-section .MuiInputBase-root.Mui-focused {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.10) !important;
+}
+
+.loan-form-section .MuiFormHelperText-root {
+  font-size: 0.98rem !important;
+  color: var(--color-text-secondary) !important;
+  margin-top: 0.1rem !important;
+  margin-bottom: 0.2rem !important;
+}
+
+/* Custom minimal tooltip */
+.loan-form-section .MuiIconButton-root {
+  background: transparent !important;
+  color: var(--color-primary) !important;
+  padding: 0.2rem !important;
+  margin-left: 0.3rem !important;
+  border-radius: 50% !important;
+  transition: background 0.2s;
+}
+.loan-form-section .MuiIconButton-root:hover {
+  background: var(--color-neutral-100) !important;
+}
+
+.loan-form-section [role="tooltip"] {
+  background: var(--color-neutral-900);
+  color: #fff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.7rem;
+  font-size: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0.97;
+  pointer-events: none;
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive improvements */
+@media (max-width: 600px) {
+  .card, .MuiPaper-root, .loan-form-container, .loan-summary-container, .extra-payment-form, .payment-schedule-container {
+    padding: 0.7rem 0.3rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .loan-form-section {
+    padding: 0.4rem 0.1rem 0.2rem 0.1rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .MuiTableCell-root {
+    font-size: 0.93rem !important;
+    padding: 0.3rem 0.2rem !important;
+  }
+}

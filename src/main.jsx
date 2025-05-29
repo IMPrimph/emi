@@ -247,8 +247,10 @@ function Main() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <div style={{margin: '16px'}}>
       <DarkModeToggle mode={mode} toggleMode={toggleMode} />
       <App />
+      </div>
     </ThemeProvider>
   )
 }
