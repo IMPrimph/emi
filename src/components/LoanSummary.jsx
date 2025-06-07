@@ -2,6 +2,10 @@ import { Paper, Typography, Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { formatCurrency } from "../utils/format";
 import useCountUp from "./useCountUp";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import SavingsIcon from "@mui/icons-material/Savings";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 
 export default function LoanSummary({
   schedule,
@@ -44,87 +48,232 @@ export default function LoanSummary({
   return (
     <Paper
       elevation={0}
+      className="card-summary scale-on-hover fade-in-up"
       sx={{
-        p: { xs: 1.5, sm: 2.5 }, // Less padding
-        background: "var(--color-card-bg)",
-        borderLeft: `4px solid var(--color-primary)`,
+        p: { xs: 3, sm: 4 },
         width: "100%",
-        minHeight: 120,
+        minHeight: 140,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        borderRadius: "var(--radius-xl)",
-        boxShadow: "var(--shadow-lg)",
-        maxWidth: 800,
-        margin: "0 auto",
-        mb: 2,
-        transition: "box-shadow 0.2s, transform 0.1s",
-        "&:hover": {
-          boxShadow: "var(--shadow-xl)",
-          transform: "translateY(-2px) scale(1.01)",
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "4px",
+          background: "linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)",
+          zIndex: 1,
         },
       }}
-      className="loan-summary-container card summary-animate"
       tabIndex={0}
       aria-label="Loan summary card"
     >
-      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-        <Box
-          sx={{
-            width: 6,
-            height: 28,
-            borderRadius: 2,
-            background: "var(--color-primary)",
-            mr: 1.5,
-          }}
-        />
+      <Box className="section-header" sx={{ mb: 3, pb: 2, borderBottom: "1px solid var(--color-border-light)" }}>
         <Typography
-          variant="h5"
-          fontWeight={700}
-          color="primary.main"
-          gutterBottom
-          sx={{ letterSpacing: 0.5 }}
+          variant="h4"
+          className="section-title"
+          sx={{
+            fontSize: "var(--font-size-xl)",
+            fontWeight: "var(--font-weight-semibold)",
+            color: "var(--color-text)",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            m: 0,
+          }}
         >
+          <Box
+            sx={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "var(--color-primary)",
+            }}
+          />
           Loan Summary
         </Typography>
       </Box>
-      <Grid container spacing={1.5}>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2" fontWeight={500} color="text.secondary">
-            EMI
-          </Typography>
-          <Typography
-            variant="h4"
-            fontWeight={700}
-            color="primary.main"
-            sx={{ fontSize: 22, mb: 0.5 }}
-          >
-            {formatCurrency(animatedEMI, locale, currency)}
-          </Typography>
+          <Box className="metric-card metric-card-primary">
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 8px rgba(15, 118, 110, 0.2)",
+                }}
+              >
+                <PaymentsIcon sx={{ color: "white", fontSize: 20 }} />
+              </Box>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontWeight: "var(--font-weight-medium)",
+                  color: "var(--color-text-secondary)",
+                  fontSize: "var(--font-size-sm)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  mb: 0
+                }}
+              >
+                Monthly EMI
+              </Typography>
+            </Box>
+            <Typography
+              variant="h4"
+              sx={{ 
+                fontWeight: "var(--font-weight-bold)",
+                color: "var(--color-primary)",
+                fontSize: "var(--font-size-2xl)",
+                lineHeight: "var(--line-height-tight)",
+                ml: 7
+              }}
+            >
+              {formatCurrency(animatedEMI, locale, currency)}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2" fontWeight={500} color="text.secondary">
-            Total Interest Paid
-          </Typography>
-          <Typography variant="h6" fontWeight={700} color="neutral.dark">
-            {formatCurrency(animatedInterest, locale, currency)}
-          </Typography>
+          <Box className="metric-card metric-card-neutral">
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, var(--color-warning) 0%, #D97706 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 8px rgba(217, 119, 6, 0.2)",
+                }}
+              >
+                <TrendingDownIcon sx={{ color: "white", fontSize: 20 }} />
+              </Box>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontWeight: "var(--font-weight-medium)",
+                  color: "var(--color-text-secondary)",
+                  fontSize: "var(--font-size-sm)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  mb: 0
+                }}
+              >
+                Total Interest
+              </Typography>
+            </Box>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: "var(--font-weight-semibold)",
+                color: "var(--color-text)",
+                fontSize: "var(--font-size-lg)",
+                ml: 7
+              }}
+            >
+              {formatCurrency(animatedInterest, locale, currency)}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2" fontWeight={500} color="text.secondary">
-            Interest Saved
-          </Typography>
-          <Typography variant="h6" fontWeight={700} color="success.main">
-            {formatCurrency(animatedSaved, locale, currency)}
-          </Typography>
+          <Box className="metric-card metric-card-success">
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, var(--color-success) 0%, #059669 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 8px rgba(16, 185, 129, 0.2)",
+                }}
+              >
+                <SavingsIcon sx={{ color: "white", fontSize: 20 }} />
+              </Box>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontWeight: "var(--font-weight-medium)",
+                  color: "var(--color-text-secondary)",
+                  fontSize: "var(--font-size-sm)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  mb: 0
+                }}
+              >
+                Interest Saved
+              </Typography>
+            </Box>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: "var(--font-weight-semibold)",
+                color: "var(--color-success)",
+                fontSize: "var(--font-size-lg)",
+                ml: 7
+              }}
+            >
+              {formatCurrency(animatedSaved, locale, currency)}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body2" fontWeight={500} color="text.secondary">
-            Months Reduced
-          </Typography>
-          <Typography variant="h6" fontWeight={700} color="primary.main">
-            {animatedMonths}
-          </Typography>
+          <Box className="metric-card metric-card-primary">
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, var(--color-secondary) 0%, #1E40AF 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 8px rgba(30, 64, 175, 0.2)",
+                }}
+              >
+                <ScheduleIcon sx={{ color: "white", fontSize: 20 }} />
+              </Box>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontWeight: "var(--font-weight-medium)",
+                  color: "var(--color-text-secondary)",
+                  fontSize: "var(--font-size-sm)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  mb: 0
+                }}
+              >
+                Time Saved
+              </Typography>
+            </Box>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: "var(--font-weight-semibold)",
+                color: "var(--color-primary)",
+                fontSize: "var(--font-size-lg)",
+                ml: 7
+              }}
+            >
+              {animatedMonths} months
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
     </Paper>

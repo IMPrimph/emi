@@ -125,43 +125,56 @@ function App() {
       className="app-container"
       sx={{
         minHeight: "100vh",
-        py: { xs: 3, md: 4 },
+        py: { xs: 4, md: 6 },
         background: "var(--color-bg)",
         transition: "var(--transition-all)",
       }}
     >
-      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3 } }}>
+      <Container maxWidth="1400px" sx={{ px: { xs: 3, sm: 4, md: 6 } }}>
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            mb: 2, // Less margin
+            mb: 8,
             position: "relative",
           }}
         >
           <Typography
             variant="h1"
             align="center"
-            className="text-gradient"
+            className="display-title"
             sx={{
-              background:
-                "linear-gradient(to right, var(--color-primary), var(--color-accent))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              fontWeight: "var(--font-weight-bold)",
               fontSize: {
-                xs: "1.7rem",
-                md: "2.2rem",
+                xs: "2rem",
+                sm: "2.5rem",
+                md: "3rem",
               },
-              mb: 0,
+              mb: 2,
+              textAlign: "center",
             }}
           >
-            Professional EMI Loan Calculator
+            Professional EMI Calculator
+          </Typography>
+          <Typography
+            variant="body1"
+            align="center"
+            sx={{
+              color: "var(--color-text-secondary)",
+              fontSize: "var(--font-size-lg)",
+              mb: 4,
+              maxWidth: "600px",
+              mx: "auto",
+              lineHeight: "var(--line-height-relaxed)",
+            }}
+          >
+            Calculate your loan payments with precision. Plan extra payments and visualize your amortization schedule.
           </Typography>
         </Box>
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} lg={4}>
+        <Grid container spacing={6} sx={{ mb: 8 }}>
+          {/* Loan Form Section - Always Visible */}
+          <Grid item xs={12} xl={4}>
             <Card>
               <LoanForm
                 loanDetails={loanDetails}
@@ -171,23 +184,32 @@ function App() {
               />
             </Card>
           </Grid>
+
+          {/* Results Section - Only show when schedule exists */}
           {schedule.length > 0 && (
-            <Grid item xs={12} lg={8}>
-              <Card>
+            <Grid item xs={12} xl={8}>
+              {/* Tabs for different views */}
+              <Box sx={{ mb: 4 }}>
                 <Tabs
                   value={tab}
                   onChange={(_, val) => setTab(val)}
                   sx={{
-                    mb: 3,
                     "& .MuiTab-root": {
-                      fontSize: "1rem",
-                      fontWeight: 600,
+                      fontSize: "var(--font-size-base)",
+                      fontWeight: "var(--font-weight-semibold)",
                       textTransform: "none",
-                      minWidth: 120,
+                      minWidth: 140,
                       color: "var(--color-text-secondary)",
+                      borderRadius: "12px 12px 0 0",
+                      marginRight: 1,
+                      "&:hover": {
+                        backgroundColor: "var(--color-primary-50)",
+                        color: "var(--color-primary)",
+                      }
                     },
                     "& .Mui-selected": {
                       color: "var(--color-primary) !important",
+                      backgroundColor: "var(--color-primary-50)",
                     },
                     "& .MuiTabs-indicator": {
                       backgroundColor: "var(--color-primary)",
@@ -197,49 +219,56 @@ function App() {
                   }}
                 >
                   <Tab label="Calculator" />
-                  <Tab label="Payments" />
+                  <Tab label="Payment Tracker" />
                 </Tabs>
-                
-                {tab === 0 && (
-                  <div className="fade-in">
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} md={6}>
-                        <Card>
-                          <ExtraPaymentForm
-                            extraPayment={extraPayment}
-                            setExtraPayment={setExtraPayment}
-                            addExtraPayment={addExtraPayment}
-                            editing={!!editingMonth}
-                          />
-                        </Card>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <LoanSummary
-                          schedule={schedule}
-                          loanDetails={loanDetails}
-                          locale={locale}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <AmortizationChart schedule={schedule} />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <PaymentSchedule
-                          schedule={schedule}
-                          locale={locale}
-                          loanDetails={loanDetails}
-                        />
-                      </Grid>
+              </Box>
+
+              {/* Calculator Tab Content */}
+              {tab === 0 && (
+                <Box className="fade-in">
+                  <Grid container spacing={4}>
+                    {/* Extra Payment Form */}
+                    <Grid item xs={12} lg={6}>
+                      <ExtraPaymentForm
+                        extraPayment={extraPayment}
+                        setExtraPayment={setExtraPayment}
+                        addExtraPayment={addExtraPayment}
+                        editing={!!editingMonth}
+                      />
                     </Grid>
-                  </div>
-                )}
-                
-                {tab === 1 && (
-                  <div className="fade-in">
-                    <ActualPaymentScreen schedule={schedule} />
-                  </div>
-                )}
-              </Card>
+                    
+                    {/* Loan Summary */}
+                    <Grid item xs={12} lg={6}>
+                      <LoanSummary
+                        schedule={schedule}
+                        loanDetails={loanDetails}
+                        locale={locale}
+                      />
+                    </Grid>
+                    
+                    {/* Amortization Chart */}
+                    <Grid item xs={12}>
+                      <AmortizationChart schedule={schedule} />
+                    </Grid>
+                    
+                    {/* Payment Schedule Table */}
+                    <Grid item xs={12}>
+                      <PaymentSchedule
+                        schedule={schedule}
+                        locale={locale}
+                        loanDetails={loanDetails}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              )}
+              
+              {/* Payment Tracker Tab Content */}
+              {tab === 1 && (
+                <Box className="fade-in">
+                  <ActualPaymentScreen schedule={schedule} />
+                </Box>
+              )}
             </Grid>
           )}
         </Grid>

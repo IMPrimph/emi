@@ -17,6 +17,11 @@ import {
   DialogActions,
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import PercentIcon from "@mui/icons-material/Percent";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CalculateIcon from "@mui/icons-material/Calculate";
+import LanguageIcon from "@mui/icons-material/Language";
 import { formatNumber } from "../utils/format";
 
 const LOCALES = [
@@ -81,17 +86,20 @@ export default function LoanForm({
       label: "Loan Amount",
       render: () => (
         <Box className="loan-form-section fade-in" sx={{ mb: 0 }}>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              mb: 1,
-              display: "flex",
-              alignItems: "center",
-              fontWeight: 600,
-              fontSize: 18,
-            }}
-          >
-            Loan Amount
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <AccountBalanceIcon sx={{ color: "var(--color-primary)", fontSize: 20 }} />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: "var(--font-weight-semibold)",
+                fontSize: "var(--font-size-base)",
+                color: "var(--color-text)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Loan Amount
+            </Typography>
             <MinimalTooltip title="Total principal you wish to borrow">
               <IconButton
                 size="small"
@@ -102,7 +110,7 @@ export default function LoanForm({
                 <InfoOutlinedIcon fontSize="small" />
               </IconButton>
             </MinimalTooltip>
-          </Typography>
+          </Box>
           <Slider
             min={minAmount}
             max={maxAmount}
@@ -173,17 +181,20 @@ export default function LoanForm({
       label: "Interest Rate",
       render: () => (
         <Box className="loan-form-section fade-in" sx={{ mb: 0 }}>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              mb: 1,
-              display: "flex",
-              alignItems: "center",
-              fontWeight: 600,
-              fontSize: 18,
-            }}
-          >
-            Interest Rate (%)
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <PercentIcon sx={{ color: "var(--color-primary)", fontSize: 20 }} />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: "var(--font-weight-semibold)",
+                fontSize: "var(--font-size-base)",
+                color: "var(--color-text)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Interest Rate (%)
+            </Typography>
             <MinimalTooltip title="Annual interest rate (in percent). Interest is compounded monthly.">
               <IconButton
                 size="small"
@@ -194,7 +205,7 @@ export default function LoanForm({
                 <InfoOutlinedIcon fontSize="small" />
               </IconButton>
             </MinimalTooltip>
-          </Typography>
+          </Box>
           <Slider
             min={minRate}
             max={maxRate}
@@ -251,17 +262,20 @@ export default function LoanForm({
       label: "Tenure",
       render: () => (
         <Box className="loan-form-section fade-in" sx={{ mb: 0 }}>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              mb: 1,
-              display: "flex",
-              alignItems: "center",
-              fontWeight: 600,
-              fontSize: 18,
-            }}
-          >
-            Tenure (Years)
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <AccessTimeIcon sx={{ color: "var(--color-primary)", fontSize: 20 }} />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: "var(--font-weight-semibold)",
+                fontSize: "var(--font-size-base)",
+                color: "var(--color-text)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Tenure (Years)
+            </Typography>
             <MinimalTooltip title="Number of years to repay the loan">
               <IconButton
                 size="small"
@@ -272,7 +286,7 @@ export default function LoanForm({
                 <InfoOutlinedIcon fontSize="small" />
               </IconButton>
             </MinimalTooltip>
-          </Typography>
+          </Box>
           <Slider
             min={minTenure}
             max={maxTenure}
@@ -393,49 +407,106 @@ export default function LoanForm({
         position: "relative",
       }}
     >
+      {/* Professional Form Header */}
+      <Box sx={{ mb: 4, textAlign: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2, mb: 2 }}>
+          <Box
+            sx={{
+              width: 48,
+              height: 48,
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 12px rgba(15, 118, 110, 0.3)",
+            }}
+          >
+            <CalculateIcon sx={{ color: "white", fontSize: 24 }} />
+          </Box>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "var(--font-weight-bold)",
+              color: "var(--color-text)",
+              fontSize: "var(--font-size-xl)",
+              letterSpacing: "0.025em",
+            }}
+          >
+            Loan Calculator
+          </Typography>
+        </Box>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "var(--color-text-muted)",
+            fontSize: "var(--font-size-sm)",
+            maxWidth: 300,
+            mx: "auto",
+            lineHeight: "var(--line-height-relaxed)",
+          }}
+        >
+          Enter your loan details to calculate monthly payments and interest
+        </Typography>
+      </Box>
+
       <Box
         component="form"
         noValidate
         autoComplete="off"
         sx={{ mb: 2, width: "100%" }}
       >
+        {/* Enhanced Locale Selector */}
         <Box
           sx={{
-            mb: 3,
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            justifyContent: "flex-end",
+            mb: 4,
+            p: 3,
+            background: "var(--color-primary-50)",
+            borderRadius: "12px",
+            border: "1px solid var(--color-primary-100)",
           }}
         >
-          <Typography
-            variant="subtitle2"
-            id="locale-label"
-            sx={{ fontWeight: 500, fontSize: 15 }}
-          >
-            Locale & Currency:
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <LanguageIcon sx={{ color: "var(--color-primary)", fontSize: 20 }} />
+            <Typography
+              variant="subtitle2"
+              sx={{ 
+                fontWeight: "var(--font-weight-semibold)", 
+                fontSize: "var(--font-size-sm)",
+                color: "var(--color-text)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Locale & Currency
+            </Typography>
+          </Box>
           <Select
             value={locale}
             onChange={(e) => setLocale(e.target.value)}
-            size="small"
+            fullWidth
             inputProps={{
               "aria-label": "Select locale and currency",
-              id: "locale-select",
             }}
             sx={{
-              minWidth: 160,
-              fontWeight: 600,
-              fontSize: 15,
-              borderRadius: 2,
-              background: "var(--color-input-bg)",
+              fontWeight: "var(--font-weight-medium)",
+              fontSize: "var(--font-size-base)",
+              borderRadius: "10px",
+              background: "var(--color-bg)",
+              "& .MuiSelect-select": {
+                padding: "12px 16px",
+              }
             }}
           >
             {LOCALES.map((l) => (
               <MenuItem
                 key={l.code}
                 value={l.code}
-                sx={{ fontWeight: 500, fontSize: 15 }}
+                sx={{ 
+                  fontWeight: "var(--font-weight-medium)", 
+                  fontSize: "var(--font-size-base)",
+                  py: 2,
+                }}
               >
                 {l.label} ({l.symbol})
               </MenuItem>

@@ -161,149 +161,215 @@ export default function PaymentSchedule({
 
   return (
     <Paper
+      elevation={0}
+      className="card card-form scale-on-hover fade-in-up"
       sx={{
-        p: { xs: 1, sm: 2 },
-        mb: 2,
-        borderRadius: 2,
-        boxShadow: "var(--shadow-md)",
-        maxWidth: 800,
-        mx: "auto",
+        p: { xs: 3, sm: 4, md: 5 },
+        mb: 3,
         width: "100%",
-        background: "var(--color-card-bg)",
+        position: "relative",
+        overflow: "hidden",
       }}
-      elevation={3}
-      className="card payment-schedule-container"
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mb: 1,
-        }}
-      >
-        <Typography
-          variant="h5"
-          fontWeight={700}
-          color="primary.main"
-          sx={{ textAlign: "center", letterSpacing: 0.5, fontSize: 20 }}
-        >
-          Payment Schedule
-          <Tooltip title="EMI: Fixed monthly payment. Extra: Additional payment. Interest: Paid to lender. Principal: Loan repaid. Remaining: Balance.">
+      {/* Professional Header Section */}
+      <Box className="section-header" sx={{ mb: 4, pb: 3, borderBottom: "2px solid var(--color-primary-100)" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)",
+            }}
+          />
+          <Typography
+            className="section-title"
+            sx={{
+              fontSize: "var(--font-size-xl)",
+              fontWeight: "var(--font-weight-bold)",
+              color: "var(--color-text)",
+              margin: 0,
+              letterSpacing: "0.025em",
+            }}
+          >
+            Payment Schedule
+          </Typography>
+          <Tooltip 
+            title="EMI: Fixed monthly payment • Extra: Additional payment • Interest: Paid to lender • Principal: Loan repaid • Remaining: Outstanding balance"
+            placement="top"
+            arrow
+          >
             <IconButton
               size="small"
-              sx={{ ml: 1 }}
+              sx={{ 
+                ml: 1,
+                color: "var(--color-primary)",
+                "&:hover": {
+                  backgroundColor: "var(--color-primary-50)",
+                  transform: "scale(1.1)",
+                }
+              }}
               tabIndex={0}
-              aria-label="Schedule info"
+              aria-label="Schedule information"
             >
               <InfoOutlinedIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-        </Typography>
-        <Box sx={{ display: "flex", gap: 1 }}>
+        </Box>
+        <Box sx={{ display: "flex", gap: 2, mt: { xs: 2, sm: 0 } }}>
           <Button
-            variant="contained"
-            size="small"
+            variant="outlined"
+            size="medium"
             startIcon={<DownloadIcon />}
             onClick={handleDownloadCSV}
             aria-label="Download schedule as CSV"
-            sx={{ minWidth: 56, fontSize: 13 }}
+            sx={{ 
+              minWidth: 100,
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--font-weight-semibold)",
+              borderRadius: "10px",
+              textTransform: "none",
+            }}
           >
-            CSV
+            Export CSV
           </Button>
           <Button
             variant="contained"
-            size="small"
+            size="medium"
             startIcon={<DownloadIcon />}
             onClick={handleDownloadPDF}
             aria-label="Download schedule as PDF"
-            sx={{ minWidth: 56, fontSize: 13 }}
+            sx={{ 
+              minWidth: 100,
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--font-weight-semibold)",
+              borderRadius: "10px",
+              textTransform: "none",
+            }}
           >
-            PDF
+            Export PDF
           </Button>
         </Box>
       </Box>
-      {/* Column toggles */}
+      {/* Professional Column Controls */}
       <Box
         sx={{
           display: "flex",
-          gap: 1,
-          mb: 1,
+          gap: 2,
+          mb: 4,
           flexWrap: "wrap",
           alignItems: "center",
-          background: "var(--color-input-bg)",
-          borderRadius: "var(--radius-lg)",
-          px: 1.5,
-          py: 0.5,
+          background: "var(--color-primary-50)",
+          borderRadius: "16px",
+          p: 3,
+          border: "1px solid var(--color-primary-100)",
         }}
       >
         <Typography
-          variant="subtitle2"
           sx={{
-            fontWeight: 700,
-            color: "primary.main",
-            mr: 1,
-            minWidth: 90,
-            fontSize: 15,
+            fontWeight: "var(--font-weight-bold)",
+            color: "var(--color-primary)",
+            fontSize: "var(--font-size-sm)",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            minWidth: 120,
           }}
         >
-          Show Columns:
+          Visible Columns:
         </Typography>
-        {columns.map((col) => (
-          <FormControlLabel
-            key={col.key}
-            control={
-              <Checkbox
-                checked={visibleCols[col.key]}
-                onChange={(e) =>
-                  setVisibleCols((v) => ({ ...v, [col.key]: e.target.checked }))
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          {columns.map((col) => (
+            <FormControlLabel
+              key={col.key}
+              control={
+                <Checkbox
+                  checked={visibleCols[col.key]}
+                  onChange={(e) =>
+                    setVisibleCols((v) => ({ ...v, [col.key]: e.target.checked }))
+                  }
+                  size="small"
+                  sx={{
+                    color: "var(--color-primary)",
+                    "&.Mui-checked": { 
+                      color: "var(--color-primary)",
+                    },
+                    "&:hover": {
+                      backgroundColor: "var(--color-primary-100)",
+                    },
+                    "& .MuiSvgIcon-root": {
+                      fontSize: 20,
+                    }
+                  }}
+                />
+              }
+              label={
+                <Typography sx={{ 
+                  fontWeight: "var(--font-weight-semibold)", 
+                  fontSize: "var(--font-size-sm)", 
+                  color: "var(--color-text)",
+                  userSelect: "none",
+                }}>
+                  {col.label}
+                </Typography>
+              }
+              sx={{ 
+                mr: 1, 
+                ml: 0,
+                "& .MuiFormControlLabel-label": {
+                  marginLeft: 1,
                 }
-                size="small"
-                sx={{
-                  color: "primary.main",
-                  "&.Mui-checked": { color: "primary.dark" },
-                }}
-              />
-            }
-            label={
-              <span style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>
-                {col.label}
-              </span>
-            }
-            sx={{ mr: 0.5, ml: 0, py: 0, px: 0.2 }}
-          />
-        ))}
+              }}
+            />
+          ))}
+        </Box>
       </Box>
       <TableContainer
-        component={Paper}
+        className="table-container"
         sx={{
-          borderRadius: "var(--radius-lg)",
-          boxShadow: "var(--shadow-sm)",
-          background: "var(--color-card-bg)",
+          borderRadius: "16px",
+          background: "var(--color-bg)",
           width: "100%",
-          maxHeight: 340,
+          maxHeight: 420,
           overflowY: "auto",
-          mt: 1,
+          border: "1px solid var(--color-border-light)",
+          position: "relative",
+          "&:before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "3px",
+            background: "linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)",
+            zIndex: 2,
+          }
         }}
       >
         <Table
-          size="small"
           stickyHeader
-          sx={{ minWidth: 720, tableLayout: "fixed", width: "100%" }}
+          sx={{ 
+            minWidth: 720, 
+            tableLayout: "fixed", 
+            width: "100%",
+          }}
         >
           <TableHead>
-            <TableRow
-              sx={{ background: "var(--color-table-header)" }}
-              className="sticky-header"
-            >
+            <TableRow>
               <TableCell
                 sx={{
-                  color: "var(--color-primary)",
-                  fontWeight: 700,
-                  fontSize: 15,
-                  letterSpacing: 1,
-                  p: 1,
-                  minWidth: 70,
+                  background: "var(--color-table-header) !important",
+                  color: "var(--color-text) !important",
+                  fontFamily: "var(--font-family-base)",
+                  fontWeight: "var(--font-weight-bold) !important",
+                  fontSize: "var(--font-size-sm) !important",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  padding: "var(--space-4) var(--space-3) !important",
+                  borderBottom: "2px solid var(--color-primary-200) !important",
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 10,
+                  minWidth: 80,
                 }}
               >
                 Month
@@ -312,12 +378,19 @@ export default function PaymentSchedule({
                 <TableCell
                   align="right"
                   sx={{
-                    color: "var(--color-primary)",
-                    fontWeight: 700,
-                    fontSize: 15,
-                    letterSpacing: 1,
-                    p: 1,
-                    minWidth: 70,
+                    background: "var(--color-table-header) !important",
+                    color: "var(--color-text) !important",
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: "var(--font-weight-bold) !important",
+                    fontSize: "var(--font-size-sm) !important",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    padding: "var(--space-4) var(--space-3) !important",
+                    borderBottom: "2px solid var(--color-primary-200) !important",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    minWidth: 100,
                   }}
                 >
                   EMI
@@ -327,27 +400,41 @@ export default function PaymentSchedule({
                 <TableCell
                   align="right"
                   sx={{
-                    color: "var(--color-primary)",
-                    fontWeight: 700,
-                    fontSize: 15,
-                    letterSpacing: 1,
-                    p: 1,
-                    minWidth: 70,
+                    background: "var(--color-table-header) !important",
+                    color: "var(--color-text) !important",
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: "var(--font-weight-bold) !important",
+                    fontSize: "var(--font-size-sm) !important",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    padding: "var(--space-4) var(--space-3) !important",
+                    borderBottom: "2px solid var(--color-primary-200) !important",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    minWidth: 100,
                   }}
                 >
-                  Extra
+                  Extra Payment
                 </TableCell>
               )}
               {visibleCols.interest && (
                 <TableCell
                   align="right"
                   sx={{
-                    color: "var(--color-primary)",
-                    fontWeight: 700,
-                    fontSize: 15,
-                    letterSpacing: 1,
-                    p: 1,
-                    minWidth: 70,
+                    background: "var(--color-table-header) !important",
+                    color: "var(--color-text) !important",
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: "var(--font-weight-bold) !important",
+                    fontSize: "var(--font-size-sm) !important",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    padding: "var(--space-4) var(--space-3) !important",
+                    borderBottom: "2px solid var(--color-primary-200) !important",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    minWidth: 100,
                   }}
                 >
                   Interest
@@ -357,12 +444,19 @@ export default function PaymentSchedule({
                 <TableCell
                   align="right"
                   sx={{
-                    color: "var(--color-primary)",
-                    fontWeight: 700,
-                    fontSize: 15,
-                    letterSpacing: 1,
-                    p: 1,
-                    minWidth: 70,
+                    background: "var(--color-table-header) !important",
+                    color: "var(--color-text) !important",
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: "var(--font-weight-bold) !important",
+                    fontSize: "var(--font-size-sm) !important",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    padding: "var(--space-4) var(--space-3) !important",
+                    borderBottom: "2px solid var(--color-primary-200) !important",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    minWidth: 100,
                   }}
                 >
                   Principal
@@ -372,28 +466,56 @@ export default function PaymentSchedule({
                 <TableCell
                   align="right"
                   sx={{
-                    color: "var(--color-primary)",
-                    fontWeight: 700,
-                    fontSize: 15,
-                    letterSpacing: 1,
-                    p: 1,
-                    minWidth: 70,
+                    background: "var(--color-table-header) !important",
+                    color: "var(--color-text) !important",
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: "var(--font-weight-bold) !important",
+                    fontSize: "var(--font-size-sm) !important",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    padding: "var(--space-4) var(--space-3) !important",
+                    borderBottom: "2px solid var(--color-primary-200) !important",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    minWidth: 120,
                   }}
                 >
-                  Remaining
+                  Balance
                 </TableCell>
               )}
             </TableRow>
           </TableHead>
           <TableBody>
             {schedule.map((row, i) => (
-              <TableRow key={i}>
+              <TableRow 
+                key={i}
+                sx={{
+                  "&:nth-of-type(even)": {
+                    backgroundColor: "var(--color-neutral-50)",
+                  },
+                  "&:hover": {
+                    backgroundColor: "var(--color-primary-50) !important",
+                    transform: "scale(1.002)",
+                    boxShadow: "inset 0 0 0 1px var(--color-primary-200)",
+                    "& .MuiTableCell-root": {
+                      color: "var(--color-text) !important",
+                    }
+                  },
+                  transition: "var(--transition-all)",
+                  cursor: "pointer",
+                }}
+              >
                 <TableCell
                   sx={{
-                    fontWeight: 500,
-                    p: 1,
-                    minWidth: 70,
-                    borderBottom: "1px solid var(--color-border)",
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: "var(--font-weight-semibold)",
+                    fontSize: "var(--font-size-sm)",
+                    color: "var(--color-text)",
+                    padding: "var(--space-3) !important",
+                    borderBottom: "1px solid var(--color-border-light) !important",
+                    transition: "var(--transition-all)",
+                    minWidth: 80,
                   }}
                 >
                   {row.month}
@@ -402,10 +524,14 @@ export default function PaymentSchedule({
                   <TableCell
                     align="right"
                     sx={{
-                      fontWeight: 500,
-                      p: 1,
-                      minWidth: 70,
-                      borderBottom: "1px solid var(--color-border)",
+                      fontFamily: "var(--font-family-base)",
+                      fontWeight: "var(--font-weight-medium)",
+                      fontSize: "var(--font-size-sm)",
+                      color: "var(--color-text-secondary)",
+                      padding: "var(--space-3) !important",
+                      borderBottom: "1px solid var(--color-border-light) !important",
+                      transition: "var(--transition-all)",
+                      minWidth: 100,
                     }}
                   >
                     {formatCurrency(row.emi)}
@@ -415,10 +541,14 @@ export default function PaymentSchedule({
                   <TableCell
                     align="right"
                     sx={{
-                      fontWeight: 500,
-                      p: 1,
-                      minWidth: 70,
-                      borderBottom: "1px solid var(--color-border)",
+                      fontFamily: "var(--font-family-base)",
+                      fontWeight: row.extra > 0 ? "var(--font-weight-semibold)" : "var(--font-weight-medium)",
+                      fontSize: "var(--font-size-sm)",
+                      color: row.extra > 0 ? "var(--color-success)" : "var(--color-text-muted)",
+                      padding: "var(--space-3) !important",
+                      borderBottom: "1px solid var(--color-border-light) !important",
+                      transition: "var(--transition-all)",
+                      minWidth: 100,
                     }}
                   >
                     {formatCurrency(row.extra)}
@@ -428,10 +558,14 @@ export default function PaymentSchedule({
                   <TableCell
                     align="right"
                     sx={{
-                      fontWeight: 500,
-                      p: 1,
-                      minWidth: 70,
-                      borderBottom: "1px solid var(--color-border)",
+                      fontFamily: "var(--font-family-base)",
+                      fontWeight: "var(--font-weight-medium)",
+                      fontSize: "var(--font-size-sm)",
+                      color: "var(--color-warning)",
+                      padding: "var(--space-3) !important",
+                      borderBottom: "1px solid var(--color-border-light) !important",
+                      transition: "var(--transition-all)",
+                      minWidth: 100,
                     }}
                   >
                     {formatCurrency(row.interest)}
@@ -441,10 +575,14 @@ export default function PaymentSchedule({
                   <TableCell
                     align="right"
                     sx={{
-                      fontWeight: 500,
-                      p: 1,
-                      minWidth: 70,
-                      borderBottom: "1px solid var(--color-border)",
+                      fontFamily: "var(--font-family-base)",
+                      fontWeight: "var(--font-weight-medium)",
+                      fontSize: "var(--font-size-sm)",
+                      color: "var(--color-primary)",
+                      padding: "var(--space-3) !important",
+                      borderBottom: "1px solid var(--color-border-light) !important",
+                      transition: "var(--transition-all)",
+                      minWidth: 100,
                     }}
                   >
                     {formatCurrency(row.principalPaid)}
@@ -454,10 +592,14 @@ export default function PaymentSchedule({
                   <TableCell
                     align="right"
                     sx={{
-                      fontWeight: 500,
-                      p: 1,
-                      minWidth: 70,
-                      borderBottom: "1px solid var(--color-border)",
+                      fontFamily: "var(--font-family-base)",
+                      fontWeight: "var(--font-weight-semibold)",
+                      fontSize: "var(--font-size-sm)",
+                      color: row.principalLeft === 0 ? "var(--color-success)" : "var(--color-text-secondary)",
+                      padding: "var(--space-3) !important",
+                      borderBottom: "1px solid var(--color-border-light) !important",
+                      transition: "var(--transition-all)",
+                      minWidth: 120,
                     }}
                   >
                     {formatCurrency(row.principalLeft)}
