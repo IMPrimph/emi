@@ -1,9 +1,15 @@
 import styled from "styled-components";
 
 export const Card = styled.div`
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  padding: var(--spacing-6);
+  background: var(--color-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
+  border: 1px solid var(--color-border);
   transition: var(--transition-all);
-  border: 3px solid var(--color-border);
+  
+  &:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+  }
 `;

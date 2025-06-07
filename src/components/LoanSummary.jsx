@@ -89,7 +89,7 @@ export default function LoanSummary({
         </Typography>
       </Box>
       <Grid container spacing={1.5}>
-        <Grid xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">
             EMI
           </Typography>
@@ -102,7 +102,7 @@ export default function LoanSummary({
             {formatCurrency(animatedEMI, locale, currency)}
           </Typography>
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">
             Total Interest Paid
           </Typography>
@@ -110,7 +110,7 @@ export default function LoanSummary({
             {formatCurrency(animatedInterest, locale, currency)}
           </Typography>
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">
             Interest Saved
           </Typography>
@@ -118,7 +118,7 @@ export default function LoanSummary({
             {formatCurrency(animatedSaved, locale, currency)}
           </Typography>
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="body2" fontWeight={500} color="text.secondary">
             Months Reduced
           </Typography>

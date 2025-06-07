@@ -125,12 +125,12 @@ function App() {
       className="app-container"
       sx={{
         minHeight: "100vh",
-        py: { xs: 2, md: 3 }, // Reduced vertical padding
+        py: { xs: 3, md: 4 },
         background: "var(--color-bg)",
         transition: "var(--transition-all)",
       }}
     >
-      <Container maxWidth="md" sx={{ px: { xs: 0.5, sm: 2 } }}>
+      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3 } }}>
         <Box
           sx={{
             display: "flex",
@@ -160,9 +160,9 @@ function App() {
             Professional EMI Loan Calculator
           </Typography>
         </Box>
-        <div style={{ display: "flex", flexDirection: "row", gap: "12px" }}>
-          <div style={{ flex: 3 }}>
-            <Card style={{ marginBottom: 20, padding: "1.2rem 1rem" }}>
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} lg={4}>
+            <Card>
               <LoanForm
                 loanDetails={loanDetails}
                 setLoanDetails={setLoanDetails}
@@ -170,85 +170,92 @@ function App() {
                 setLocale={setLocale}
               />
             </Card>
-          </div>
+          </Grid>
           {schedule.length > 0 && (
-            <Card style={{ padding: "1.2rem 1rem" }}>
-              <Tabs
-                value={tab}
-                onChange={(_, val) => setTab(val)}
-                centered
-                sx={{
-                  mb: 2,
-                  display: "flex",
-                  gap: 1,
-                  "& .MuiTabs-flexContainer": {
-                    gap: 1,
-                  },
-                  "& .MuiTab-root": {
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    textTransform: "none",
-                    minWidth: 100,
-                  },
-                }}
-              >
-                <Tab label="Calculator" />
-                <Tab label="Payments" />
-              </Tabs>
-              {tab === 0 && (
-                <div className="fade-in">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <Card style={{ padding: "1.2rem 1rem" }}>
-                        <ExtraPaymentForm
-                          extraPayment={extraPayment}
-                          setExtraPayment={setExtraPayment}
-                          addExtraPayment={addExtraPayment}
-                          editing={!!editingMonth}
+            <Grid item xs={12} lg={8}>
+              <Card>
+                <Tabs
+                  value={tab}
+                  onChange={(_, val) => setTab(val)}
+                  sx={{
+                    mb: 3,
+                    "& .MuiTab-root": {
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      textTransform: "none",
+                      minWidth: 120,
+                      color: "var(--color-text-secondary)",
+                    },
+                    "& .Mui-selected": {
+                      color: "var(--color-primary) !important",
+                    },
+                    "& .MuiTabs-indicator": {
+                      backgroundColor: "var(--color-primary)",
+                      height: 3,
+                      borderRadius: "2px",
+                    },
+                  }}
+                >
+                  <Tab label="Calculator" />
+                  <Tab label="Payments" />
+                </Tabs>
+                
+                {tab === 0 && (
+                  <div className="fade-in">
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} md={6}>
+                        <Card>
+                          <ExtraPaymentForm
+                            extraPayment={extraPayment}
+                            setExtraPayment={setExtraPayment}
+                            addExtraPayment={addExtraPayment}
+                            editing={!!editingMonth}
+                          />
+                        </Card>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <LoanSummary
+                          schedule={schedule}
+                          loanDetails={loanDetails}
+                          locale={locale}
                         />
-                      </Card>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <AmortizationChart schedule={schedule} />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <PaymentSchedule
+                          schedule={schedule}
+                          locale={locale}
+                          loanDetails={loanDetails}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <LoanSummary
-                        schedule={schedule}
-                        loanDetails={loanDetails}
-                        locale={locale}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <AmortizationChart schedule={schedule} />
-                    </Grid>
-                  </Grid>
-                  <Box sx={{ mt: 2 }}>
-                    <PaymentSchedule
-                      schedule={schedule}
-                      locale={locale}
-                      loanDetails={loanDetails}
-                    />
-                  </Box>
-                </div>
-              )}
-              {tab === 1 && (
-                <div className="fade-in">
-                  <ActualPaymentScreen schedule={schedule} />
-                </div>
-              )}
-            </Card>
+                  </div>
+                )}
+                
+                {tab === 1 && (
+                  <div className="fade-in">
+                    <ActualPaymentScreen schedule={schedule} />
+                  </div>
+                )}
+              </Card>
+            </Grid>
           )}
-        </div>
+        </Grid>
       </Container>
       <Box
         component="footer"
         sx={{
-          mt: 3,
+          mt: 6,
+          pt: 3,
+          borderTop: "1px solid var(--color-border)",
           textAlign: "center",
           color: "var(--color-text-secondary)",
-          fontSize: "0.95rem",
         }}
       >
-        <Typography variant="body2">
-          © {new Date().getFullYear()} Professional EMI Loan Calculator. All
-          Rights Reserved.
+        <Typography variant="body2" sx={{ fontSize: "0.875rem" }}>
+          © {new Date().getFullYear()} Professional EMI Loan Calculator. Built with precision.
         </Typography>
       </Box>
     </Box>

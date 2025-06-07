@@ -31,7 +31,7 @@ export default function ExtraPaymentForm({
       }}
     >
       <Grid container spacing={1.5} alignItems="center" justifyContent="center">
-        <Grid xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label={
               <span>
@@ -72,7 +72,7 @@ export default function ExtraPaymentForm({
             }
           />
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label={
               <span>
@@ -139,7 +139,7 @@ export default function ExtraPaymentForm({
           </Button>
         </Grid>
         {error && (
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <Alert severity="warning" sx={{ mt: 1, fontSize: 14, p: 1.2 }}>
               {error}
             </Alert>

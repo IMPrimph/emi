@@ -5,6 +5,8 @@ import CssBaseline from '@mui/material/CssBaseline'
 import App from './App.jsx'
 import DarkModeToggle from './components/DarkModeToggle.jsx'
 import { setBodyTheme } from './utils/theme.js'
+import './index.css'
+import './App.css'
 
 function Main() {
   const [mode, setMode] = useState(() => {

@@ -21,7 +21,6 @@ function AmortizationChart({ schedule }) {
 
   // Year/quarter toggle
   const [view, setView] = useState('year');
-  const [selected, setSelected] = useState(null); // selected year/quarter
   const monthsPerGroup = view === 'year' ? 12 : 3;
   const groups = Math.ceil(schedule.length / monthsPerGroup);
   const labels = Array.from({ length: groups }, (_, i) => view === 'year' ? `Year ${i + 1}` : `Q${i + 1}`);
@@ -31,7 +30,6 @@ function AmortizationChart({ schedule }) {
   const handleBrush = (e) => {
     const val = Number(e.target.value);
     setBrush([val, val]);
-    setSelected(val);
   };
 
   // Prepare data for chart
@@ -90,11 +88,10 @@ function AmortizationChart({ schedule }) {
       order: 0,
     });
     return { labels, datasets };
-  }, [schedule, view]);
+  }, [schedule, view, monthsPerGroup, groups, labels]);
 
   // Milestone: 50% principal paid, ₹1L interest saved
   const totalPrincipal = schedule.reduce((sum, row) => sum + row.principalPaid, 0);
-  const totalInterest = schedule.reduce((sum, row) => sum + row.interest, 0);
   let milestone50 = null, milestone1L = null, runningPrincipal = 0, runningInterest = 0;
   for (let i = 0; i < schedule.length; ++i) {
     runningPrincipal += schedule[i].principalPaid;

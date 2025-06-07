@@ -17,7 +17,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { formatNumber, formatCurrency } from "../utils/format";
+import { formatNumber } from "../utils/format";
 
 const LOCALES = [
   { code: "en-IN", label: "English (India)", currency: "INR", symbol: "₹" },

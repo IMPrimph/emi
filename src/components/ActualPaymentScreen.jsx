@@ -48,7 +48,9 @@ export default function ActualPaymentScreen({ schedule }) {
       const updated = { ...prev, [monthNum]: [...list, amtNum] };
       try {
         localStorage.setItem("emi_actual_payments", JSON.stringify(updated));
-      } catch (e) {}
+      } catch {
+        // Ignore localStorage errors
+      }
       return updated;
     });
     setEntry({ month: "", amount: "" });
